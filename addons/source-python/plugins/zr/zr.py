@@ -44,6 +44,7 @@ grenades = ['weapon_hegrenade', 'weapon_flashbang', 'weapon_smokegrenade']
 #===================
 # Def/Global functions
 #===================
+clan = ['Test']
 
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
