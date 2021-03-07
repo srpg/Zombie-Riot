@@ -268,15 +268,14 @@ def player_death(args):
 				if not play.speed > 1.5:
 					play.speed += 5
 					play.speed -= 4.95
-			if Player(index_from_userid(userid)).team == 3:
-				if _humans > 0:
-					Player(index_from_userid(userid)).delay(0.1, timer, (userid, 30, 1))
 			if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)):
 				player = Player(index_from_userid(userid))
 				if player.is_bot():
 					_value -= 1
 				if player.team == 3: 
 					_humans -= 1
+					if _humans > 0:
+						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 30, 1))
 				if _humans > 0:
 					Delay(0.1, won)
 					if player.team == 2 and _value > 19:
