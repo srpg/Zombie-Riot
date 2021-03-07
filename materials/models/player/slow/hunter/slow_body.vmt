@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+	"$basetexture" 	"models/player/slow/hunter/slow_body"
+	"$bumpmap"	"models/player/slow/hunter/slow_body_bump"
+
+	"$selfillum" 1
+	"$selfillumtint" "[0 1 0]"
+
+ 	"$phong" "1"
+	"$phongexponent" "9"
+	"$phongboost"	"1.3"
+	"$phongfresnelranges"	"[1 1 1]"
+}

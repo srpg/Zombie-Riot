@@ -1,0 +1,10 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/krall/slow_body"
+	"$bumpmap" "models/player/slow/krall/slow_body_bump"
+
+ 	"$phong" "1"
+	"$phongexponent" "8"
+	"$phongboost"	"11"
+	"$phongfresnelranges"	"[.15 .5 1]"
+}
