@@ -390,16 +390,35 @@ def info_menu_callback(_menu, _index, _option):
 		userid = userid_from_index(_index)
 		if choice == 'Back':
 			main_menu(userid)
-
-def info_menu(userid):
+		elif choice == 'menu':
+			potions_info_menu(userid)
+		elif choice == 'return':
+			info_menu(userid)
+            
+def potions_info_menu(userid):
 	menu = SimpleMenu()
 	if is_queued(menu, index_from_userid(userid)):
 		return
 	menu.append(Text('About Potions'))
 	menu.append(Text('-' * 30))
 	menu.append(Text('- Health potions is based of your total health.'))
+	menu.append(Text('- Speed potions is based of your current speed.'))
 	menu.append(Text('- The purchased potions only last to:'))
 	menu.append(Text('- Death or new round start'))
+	menu.append(Text('-' * 30))
+	menu.append(SimpleOption(8, 'Back', 'return'))
+	menu.append(SimpleOption(0, 'Close', None))
+	menu.select_callback = info_menu_callback
+	menu.send(index_from_userid(userid))
+    
+def info_menu(userid):
+	menu = SimpleMenu()
+	if is_queued(menu, index_from_userid(userid)):
+		return
+	menu.append(Text('Info Menu'))
+	menu.append(Text('-' * 30))
+	menu.append(Text(' '))
+	menu.append(SimpleOption(1, 'Potions', 'menu'))
 	menu.append(Text(' '))
 	menu.append(Text('About Zombie Riot:'))
 	menu.append(Text('- Made by F1N/srpg'))
