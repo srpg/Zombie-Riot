@@ -13,8 +13,11 @@ Currently have 11Days as max, but you can easyly add more.
 In _settings file you need add for example day 12 following:
 
 [12]
+
   amount = 150
+  
   health = 600
+  
   Model = 'models/player/zh/zh_corpse002.mdl'
   
 You also need change in [Days]
