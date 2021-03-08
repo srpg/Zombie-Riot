@@ -1,6 +1,7 @@
 from events import Event
 from players.entity import Player
 from players.helpers import index_from_userid
+from weapons.manager import weapon_manager
 from zr import zr
 
 @Event('player_death')
