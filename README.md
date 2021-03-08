@@ -10,7 +10,7 @@ Load Command: sp plugin load zr
 
 Currently have 11Days as max, but you can easyly add more.
 
-#Example of days adding
+# Example of days adding
 1.Go inside of _settings.ini file.
 2.Make enter inside of file after [11]
 3.Add [12] inside of _settings file
