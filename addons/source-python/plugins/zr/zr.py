@@ -1,4 +1,4 @@
-# Imports
+ # Imports
 import os, path, random
 # Core
 from core import GAME_NAME, echo_console
@@ -28,8 +28,11 @@ from stringtables.downloads import Downloadables
 # Color
 from colors import Color
 # Menus
-from menus import PagedMenu, PagedOption, Text, SimpleMenu, SimpleOption
-
+from menus import Text, SimpleMenu, PagedMenu, SimpleOption
+# Own Modules
+from zr.modules import market 
+from zr.modules import potion
+from zr.modules import clan_tag
 
 __FILEPATH__    = path.Path(__file__).dirname()
 _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
@@ -37,9 +40,6 @@ download = os.path.join(__FILEPATH__ + '/css.txt')
 
 weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 
-pistols = ['weapon_glock', 'weapon_deagle', 'weapon_fiveseven', 'weapon_elite', 'weapon_p228', 'weapon_usp']
-primarys = ['weapon_m4a1','weapon_ak47','weapon_awp','weapon_scout','weapon_sg552','weapon_galil','weapon_famas','weapon_aug','weapon_ump45','weapon_mp5navy','weapon_m3','weapon_xm1014','weapon_tmp','weapon_mac10','weapon_p90','weapon_g3sg1','weapon_sg550','weapon_m249']
-grenades = ['weapon_hegrenade', 'weapon_flashbang', 'weapon_smokegrenade']
 
 #===================
 # Def/Global functions
@@ -260,15 +260,6 @@ def player_death(args):
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
 		if attacker > 0:
-			play = Player(index_from_userid(attacker))
-			if not play.is_bot() and play.clan_tag in clan:
-				if not play.max_health > 145:
-					play.max_health += 5
-				if not play.health > 145:
-					play.health += 5
-				if not play.speed > 1.5:
-					play.speed += 5
-					play.speed -= 4.95
 			if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)):
 				player = Player(index_from_userid(userid))
 				if player.is_bot():
@@ -362,24 +353,13 @@ def build_hudmessage(userid):
 def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
-		userid = args.get_int('userid')
-		attacker = args.get_int('attacker')
-		if attacker > 0:
-			if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:
-				if args.get_string('weapon') == 'hegrenade':
+		if args.get_string('weapon') == 'hegrenade':
+			userid = args.get_int('userid')
+			attacker = args.get_int('attacker')
+			if attacker > 0:
+				if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:
 					Player(index_from_userid(userid)).ignite(10.0)    
-				play = Player(index_from_userid(attacker))
-				if not play.is_bot() and play.clan_tag in clan:
-					chance = 10
-					if random.randint(1, 100) <= chance:
-						weapon = play.active_weapon
-						primary = play.primary
-						secondary = play.secondary
-						max_clip = weapon_manager[weapon.classname].clip
-						if weapon == primary:
-							weapon.clip = max_clip
-						elif weapon == secondary:
-							weapon.clip = max_clip                        
+                  
 
 #==================================
 # Menu Call Backs
@@ -392,32 +372,15 @@ def is_queued(_menu, _index):
 				return True
 	return False
 
-def menu_callback(_menu, _index, _option):
-	choice = _option.value
-	if choice:
-		userid = userid_from_index(_index)
-		player = Player(index_from_userid(userid))
-		player.cash -= _option.value.cost
-		if isAlive(userid):
-			if choice.name in pistols and not grenades:
-				if player.secondary:
-					player.secondary.remove()
-			elif choice.name in primarys and not grenades:
-				if player.primary:
-					player.primary.remove()
-			player.give_named_item('%s' % (choice.name))
-			SayText2('\x04[Zombie Riot] » You have bought %s with %s$' % (choice.basename.upper(), choice.cost)).send(_index)
-		else:
-			SayText2('\x04[Zombie Riot] » You need to be alive for weapon').send(_index)
-            
+
 def main_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
 		userid = userid_from_index(_index)
 		if choice == 'weapon':
-			market(userid)
+			market.weapons_menu(userid)
 		elif choice == 'potion':
-			potion_market_menu(userid)
+			potion.potion_market_menu(userid)
 		elif choice == 'info':
 			info_menu(userid)
 
@@ -455,22 +418,6 @@ def info_menu(userid):
 	menu.select_callback = info_menu_callback
 	menu.send(index_from_userid(userid))
     
-def potion_market_menu(userid):
-	menu = SimpleMenu()
-	if is_queued(menu, index_from_userid(userid)):
-		return
-	player = Player(index_from_userid(userid))
-	menu.append(Text('Market\nSection: Potions'))
-	menu.append(Text('-' * 30))
-	menu.append(SimpleOption(1, 'Full Health[12000$]', 'full_health', player.cash >= 12000 and isAlive(userid), player.cash >= 12000 and isAlive(userid)))
-	menu.append(SimpleOption(2, 'Half Health[6000$]', 'half_health', player.cash >= 6000 and isAlive(userid), player.cash >= 6000 and isAlive(userid)))
-	menu.append(SimpleOption(3, '25% Of Health[3000$]', '25_health', player.cash >= 3000 and isAlive(userid), player.cash >= 3000 and isAlive(userid)))
-	menu.append(SimpleOption(4, 'Full Bullets[16000$]', 'full_bullets', player.cash >= 16000 and isAlive(userid), player.cash >= 16000 and isAlive(userid)))
-	menu.append(Text('-' * 30))
-	menu.append(SimpleOption(0, 'Close', None))
-	menu.select_callback = potion_menu_callback
-	menu.send(index_from_userid(userid))
-    
 def main_menu(userid):
 	menu = SimpleMenu()
 	if is_queued(menu, index_from_userid(userid)):
@@ -483,63 +430,4 @@ def main_menu(userid):
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = main_menu_callback
-	menu.send(index_from_userid(userid))
-
-def potion_menu_callback(_menu, _index, _option):
-	choice = _option.value
-	if choice:
-		userid = userid_from_index(_index)
-		player = Player(index_from_userid(userid))
-		name = player.name
-		if choice == 'full_health':
-			if isAlive(userid):
-				player.health += player.max_health
-				player.cash -= 12000
-				SayText2('\x04[Zombie Riot] » You have bought full health with 12000$').send(_index)
-			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
-		elif choice == 'half_health':
-			if isAlive(userid):
-				bonus = int(player.max_health / 2)
-				player.health += bonus
-				player.cash -= 6000
-				SayText2('\x04[Zombie Riot] » You have bought half health with 6000$').send(_index)
-			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
-		elif choice == '25_health':
-			if isAlive(userid):
-				bonus = int(player.max_health / 4)
-				player.health += bonus
-				player.cash -= 3000
-				SayText2('\x04[Zombie Riot] » You have bought 25% health with 3000$').send(_index)
-			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
-		elif choice == 'full_bullets':
-			if isAlive(userid):
-				player.cash -= 16000
-				weapon = player.active_weapon
-				primary = player.primary
-				secondary = player.secondary
-				max_clip = weapon_manager[weapon.classname].clip
-				max_ammo = weapon_manager[weapon.classname].maxammo
-				if weapon == primary:
-					weapon.clip = max_clip
-					weapon.ammo = max_ammo
-				elif weapon == secondary:
-					weapon.clip = max_clip
-					weapon.ammo = max_ammo
-				SayText2('\x04[Zombie Riot] » You have bought full bullets with 16000$').send(_index)
-			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy full bullets').send(_index)
-        
-def market(userid):
-	menu = PagedMenu(title='Weapons\n')
-	if is_queued(menu, index_from_userid(userid)):
-		return
-	for weapon in weapon_manager.values():
-		if weapon.cost is None:
-			continue
-		afford = Player(index_from_userid(userid)).cash >= weapon.cost and isAlive(userid)
-		menu.append(PagedOption(f'{weapon.basename.upper()} [{weapon.cost}$]',weapon, afford, afford))
-	menu.select_callback = menu_callback
 	menu.send(index_from_userid(userid))
