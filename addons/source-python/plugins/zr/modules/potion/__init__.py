@@ -71,7 +71,7 @@ def potion_menu_callback(_menu, _index, _option):
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy full bullets').send(_index)
 		elif choice == '25_speed':
 			if zr.isAlive(userid):
-				bonus = player.speed / 4
+				bonus = int(player.speed / 4)
 				player.speed += bonus
 				player.cash -= 3000
 				SayText2('\x04[Zombie Riot] » You have bought 25% speed with 3000$').send(_index)
@@ -79,7 +79,7 @@ def potion_menu_callback(_menu, _index, _option):
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy speed potion').send(_index)
 		elif choice == 'half_speed':
 			if zr.isAlive(userid):
-				bonus = player.speed / 2
+				bonus = int(player.speed / 2)
 				player.speed += bonus
 				player.cash -= 6000
 				SayText2('\x04[Zombie Riot] » You have bought half speed with 6000$').send(_index)

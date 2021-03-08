@@ -33,6 +33,7 @@ from menus import Text, SimpleMenu, PagedMenu, SimpleOption
 from zr.modules import market 
 from zr.modules import potion
 from zr.modules import clan_tag
+from zr.modules import version
 
 __FILEPATH__    = path.Path(__file__).dirname()
 _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
@@ -116,6 +117,10 @@ def load():
 			global _day
 			_day = 1
 			echo_console('***********************************************************')
+			if version.version_checker() > int(version.Ver):
+				echo_console('[Zombie Riot] There is new version available to download!')
+			else:
+				echo_console('[Zombie Riot] There is no new version available!')
 			echo_console('[Zombie Riot] Initializing Settings')
 			queue_command_string('bot_quota 20')
 			queue_command_string('bot_join_after_player 0')
