@@ -1,3 +1,4 @@
+import random
 from events import Event
 from players.entity import Player
 from players.helpers import index_from_userid
