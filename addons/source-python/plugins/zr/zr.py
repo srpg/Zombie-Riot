@@ -117,7 +117,7 @@ def load():
 			global _day
 			_day = 1
 			echo_console('***********************************************************')
-			if version.version_checker() > int(version.Ver):
+			if version.version_checker() > version.Ver:
 				echo_console('[Zombie Riot] There is new version available to download!')
 			else:
 				echo_console('[Zombie Riot] There is no new version available!')
