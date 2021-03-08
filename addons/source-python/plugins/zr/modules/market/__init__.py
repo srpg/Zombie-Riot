@@ -47,6 +47,7 @@ def main_menu_callback(_menu, _index, _option):
 		if choice == 'rebuy':
 			if zr.isAlive(userid):
 				weapon = player.active_weapon
+				player.cash -= 1000
 				primary = player.primary
 				secondary = player.secondary
 				max_clip = weapon_manager[weapon.classname].clip
@@ -57,6 +58,9 @@ def main_menu_callback(_menu, _index, _option):
 				elif weapon == secondary:
 					weapon.clip = max_clip
 					weapon.ammo = max_ammo
+				SayText2('\x04[Zombie Riot] » You have rebuy weapons bullets back with %s$' % (1000)).send(_index)
+			else:
+				SayText2('\x04[Zombie Riot] » You need to be alive for weapons bullets rebuy').send(_index)
 		elif choice == 'secondary':
 			secondary_weapons_menu(userid)
 		elif choice == 'primary':
