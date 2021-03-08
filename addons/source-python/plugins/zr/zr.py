@@ -45,7 +45,7 @@ weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 #===================
 # Def/Global functions
 #===================
-clan = ['Test']
+clan = ['[Best RPG]']# Currently let use [Best RPG] for clan tag features
 
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
@@ -118,7 +118,8 @@ def load():
 			_day = 1
 			echo_console('***********************************************************')
 			if version.version_checker() > version.Ver:
-				echo_console('[Zombie Riot] There is new version available to download!')
+				echo_console('[Zombie Riot] There is %s version available to download!' % (version.version_checker()))
+				echo_console('[Zombie Riot] You are currently using %s Version' % (version.Ver))
 			else:
 				echo_console('[Zombie Riot] There is no new version available!')
 			echo_console('[Zombie Riot] Initializing Settings')

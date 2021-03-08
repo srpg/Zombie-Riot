@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 
-Ver = '1.0.1'
+Ver = '1.0.2'
 
 new_version = ('http://cssbestrpg.online/version.txt')
 
