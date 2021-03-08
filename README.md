@@ -26,3 +26,22 @@ Currently have 11Days as max, but you can easyly add more.
 7.After you pressed enter add Model ='models/player/zh/zh_corpse002.mdl'
 
 8.After those change in [Days] value = 12
+
+# How to add files to download
+1. Go inside of css.text file.
+2. Add inside of css.txt file materials/models file path
+
+For example like:
+
+  models/player/zh/zh_zombie003.dx80.vtx
+  
+  models/player/zh/zh_zombie003.dx90.vtx
+  
+  models/player/zh/zh_zombie003.mdl
+  
+  models/player/zh/zh_zombie003.phy
+  
+  models/player/zh/zh_zombie003.sw.vtx
+  
+  models/player/zh/zh_zombie003.vvd
+  
