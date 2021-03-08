@@ -115,6 +115,8 @@ def load():
 			_health = 100
 			global _day
 			_day = 1
+			echo_console('***********************************************************')
+			echo_console('[Zombie Riot] Initializing Settings')
 			queue_command_string('bot_quota 20')
 			queue_command_string('bot_join_after_player 0')
 			queue_command_string('bot_join_team t')
@@ -122,9 +124,7 @@ def load():
 			queue_command_string('mp_autoteambalance 0')
 			queue_command_string('bot_chatter off')
 			queue_command_string('mp_humanteam ct')
-			echo_console('***********************************************************')
 			set_download()
-			clan = ['Test']
 			echo_console('[Zombie Riot] Clan Tag: %s' % (clan))
 			init_loop()
 			echo_console('[Zombie Riot] Author: F1N/srpg')
