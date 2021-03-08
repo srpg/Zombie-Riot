@@ -14,8 +14,9 @@ from engines.precache import Model
 from engines.server import queue_command_string
 # Delay
 from listeners.tick import Delay
-# Say Commands
+# Say/Server Commands
 from commands.say import SayFilter
+from commands.server import ServerCommand
 # Config
 from configobj import ConfigObj
 # Weapon
@@ -40,6 +41,14 @@ _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
 download = os.path.join(__FILEPATH__ + '/css.txt')
 
 weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
+
+#=====================
+# Config
+#=====================
+server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
+fire = 0 # Enable firegrenades, there is bug if dies to fire, it won't reduce amount of zombies
+info_panel = 1 # Enable left side of screen keyhint
+
 
 
 #===================
@@ -103,6 +112,10 @@ def sayfilter(command, index, teamonly):
 					main_menu(userid)
 					return False
 
+@ServerCommand('zombie_version')
+def zombie_version(command):
+	version.check_version()
+
 def load():
 	global _loaded
 	global _value
@@ -117,11 +130,7 @@ def load():
 			global _day
 			_day = 1
 			echo_console('***********************************************************')
-			if version.version_checker() > version.Ver:
-				echo_console('[Zombie Riot] There is %s version available to download!' % (version.version_checker()))
-				echo_console('[Zombie Riot] You are currently using %s Version' % (version.Ver))
-			else:
-				echo_console('[Zombie Riot] There is no new version available!')
+			version.check_version()
 			echo_console('[Zombie Riot] Initializing Settings')
 			queue_command_string('bot_quota 20')
 			queue_command_string('bot_join_after_player 0')
@@ -155,7 +164,7 @@ def unload():
 		msg = 'Loaded'
 	echo_console('[Zombie Riot] Plugin is %s' % (msg))
 	echo_console('***********************************************************')
-
+                
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).get_property_bool('pl.deadflag')
 
@@ -226,9 +235,11 @@ def round_start(args):
 		global _humans
 		_health = get_health(_day)
 		_value = get_days(_day)
-		queue_command_string('hostname "Zombie Riot Day: [%s/%s]"' % (_day, max_day()))
+		if server_name:
+			queue_command_string('hostname "Zombie Riot Day: [%s/%s]"' % (_day, max_day()))
 		_humans = real_count()
 		echo_console('***********************************************************')
+		echo_console('[Zombie Riot] Round Start')
 		echo_console('[Zombie Riot] Current Day: %s/%s' % (_day, max_day()))
 		echo_console('[Zombie Riot] Current Zombies: %s' % (_value))
 		if _day > 0:
@@ -333,7 +344,7 @@ def info():
 	temp_menu = PagedMenu()
 	temp_menu = SimpleMenu()
 	for i in getUseridList():
-		if not is_queued(temp_menu, index_from_userid(i)):
+		if not is_queued(temp_menu, index_from_userid(i)) and info_panel:
 			hudmessage(i, build_hudmessage(i))
 
 def build_hudmessage(userid):
@@ -359,7 +370,7 @@ def build_hudmessage(userid):
 def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
-		if args.get_string('weapon') == 'hegrenade':
+		if args.get_string('weapon') == 'hegrenade' and fire:
 			userid = args.get_int('userid')
 			attacker = args.get_int('attacker')
 			if attacker > 0:
