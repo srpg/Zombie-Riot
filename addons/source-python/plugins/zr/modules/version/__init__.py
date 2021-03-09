@@ -37,6 +37,6 @@ def download(timeout=3):
 def zombie_downloadd(command):
 	if version_checker() > Ver:
 		download()
-		echo_console('[Zombie Riot] You have download newest version of the plugin. Restart a server to apply changes')
+		echo_console('[Zombie Riot] You have downloaded newest version of the plugin. Restart a server to apply changes')
 	else:
 		echo_console('[Zombie Riot] There is no new version available to download')
