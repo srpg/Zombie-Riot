@@ -21,7 +21,6 @@ from commands.server import ServerCommand
 from configobj import ConfigObj
 # Weapon
 from filters.weapons import WeaponClassIter, WeaponIter
-from weapons.manager import weapon_manager
 # Messages
 from messages import TextMsg, HudMsg, SayText2
 # Download
