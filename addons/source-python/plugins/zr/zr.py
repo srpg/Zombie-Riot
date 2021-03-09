@@ -30,6 +30,7 @@ from colors import Color
 # Menus
 from menus import Text, SimpleMenu, PagedMenu, SimpleOption
 # Own Modules
+from zr.modules import admin
 from zr.modules import market 
 from zr.modules import potion
 from zr.modules import clan_tag
@@ -399,6 +400,8 @@ def main_menu_callback(_menu, _index, _option):
 			potion.potion_market_menu(userid)
 		elif choice == 'info':
 			info_menu(userid)
+		elif choice == 'admin_menu':
+			admin.adminmenu(userid)
 
 def info_menu_callback(_menu, _index, _option):
 	choice = _option.value
@@ -462,6 +465,8 @@ def main_menu(userid):
 	menu.append(SimpleOption(1, 'Weapons', 'weapon'))
 	menu.append(SimpleOption(2, 'Potions', 'potion'))
 	menu.append(SimpleOption(3, 'Info', 'info'))
+	if admin.is_admin(userid):
+		menu.append(SimpleOption(4, 'Admin', 'admin_menu'))
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = main_menu_callback
