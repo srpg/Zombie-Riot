@@ -7,7 +7,6 @@ from core import echo_console
 from commands.server import ServerCommand
 
 Ver = '1.0.4'
-download_url = ('https://github.com/srpg/Zombie-Riot/archive/main.zip')
 new_version = ('http://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
@@ -40,4 +39,4 @@ def zombie_downloadd(command):
 		download()
 		echo_console('[Zombie Riot] You have download newest version of the plugin. Restart a server to apply changes')
 	else:
-		echo_console('[Zombie Riot] There is not new build available to download')
+		echo_console('[Zombie Riot] There is no new version available to download')
