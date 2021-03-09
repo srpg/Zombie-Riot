@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from core import echo_console
 from commands.server import ServerCommand
 
-Ver = '1.0.7'
+Ver = '1.0.8'
 new_version = ('http://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
@@ -25,13 +25,13 @@ def download(timeout=3):
 	with urlopen('https://github.com/srpg/Zombie-Riot/archive/main.zip') as response:
 		with ZipFile(BytesIO(response.read())) as zipfile:
 			for info in zipfile.infolist():
-				filename = info.filename
-				path = GAME_PATH / filename.split('/', 1)[1]
 				if info.is_dir():
-					path.makedirs_p()
-				else:
-					with open(path, 'wb') as f:
-						f.write(zipfile.read(filename))
+					continue
+				filename = info.filename
+				path = GAME_PATH / Path(filename.split('/', 1)[1])
+				path.dirname().makedirs_p()
+				with open(path, 'wb') as f:
+					f.write(zipfile.read(filename))
 
 @ServerCommand('zombie_download')
 def zombie_downloadd(command):
