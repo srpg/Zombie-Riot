@@ -5,6 +5,18 @@ from players.helpers import index_from_userid
 from weapons.manager import weapon_manager
 from zr import zr
 
+@Event('player_spawn')
+def player_spawn(args):
+	userid = args.get_int('userid')
+	player = Player(index_from_userid(userid))
+	if player.clan_tag in zr.clan:
+		player.max_health += 25
+		player.health = player.max_health
+		player.speed += 0.10 # Increases 10% of speed
+		base = 1
+		player.gravity = base
+		player.gravity -= 0.10 # Lowers gravity 10%
+
 @Event('player_death')
 def player_death(args):
 	userid = args.get_int('userid')

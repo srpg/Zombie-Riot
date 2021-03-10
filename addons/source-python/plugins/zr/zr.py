@@ -216,13 +216,6 @@ def player_spawn(args):
 			_humans += 1
 			SayText2('\x04[Zombie Riot] » The game is human vs zombies, to order win a day you have to kill all zombies.').send(player.index)
 			SayText2('\x04[Zombie Riot] » Type market to open main menu').send(player.index)
-		if player.clan_tag in clan:
-			player.max_health += 25
-			player.health = player.max_health
-			player.speed += 0.10 # Increases 10% of speed
-			base = 1
-			player.gravity = base
-			player.gravity -= 0.10 # Lowers gravity 10%
 
 @Event('round_start')
 def round_start(args):
