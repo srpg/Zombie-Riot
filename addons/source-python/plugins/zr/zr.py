@@ -35,6 +35,7 @@ from zr.modules import market
 from zr.modules import potion
 from zr.modules import clan_tag
 from zr.modules import version
+from zr.modules import message
 
 __FILEPATH__    = path.Path(__file__).dirname()
 _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
@@ -147,8 +148,6 @@ def load():
 			echo_console('[Zombie Riot] Loaded Completely')
 			queue_command_string('mp_restartgame 1')
 			echo_console('***********************************************************')
-		else:
-			echo_console('[Zombie Riot] The plugin is not loaded!')
 	else:
 		raise NotImplementedError('[Zombie Riot] This plugin only supports Counter-Strike-Source!') 
 
@@ -214,8 +213,8 @@ def player_spawn(args):
 		if player.team == 3:
 			global _humans
 			_humans += 1
-			SayText2('\x04[Zombie Riot] » The game is human vs zombies, to order win a day you have to kill all zombies.').send(player.index)
-			SayText2('\x04[Zombie Riot] » Type market to open main menu').send(player.index)
+			message.Game.send(player.index)
+			message.Market.send(player.index)
 
 @Event('round_start')
 def round_start(args):
@@ -280,9 +279,9 @@ def player_death(args):
 						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 30, 1))
 				if _humans > 0:
 					Delay(0.1, won)
-					if player.team == 2 and _value > 19:
-						Delay(0.1, respawn, (userid,))
-
+					if player.team == 2:
+						if _value > 19:
+							Delay(0.1, respawn, (userid,))
 
 @Event('weapon_fire_on_empty')
 def weapon_fire_on_empty(args):
@@ -305,8 +304,8 @@ def won():
             
 def winner():
 	global _day
-	SayText2('\x04[Zombie Riot] » Congralations the humans has won the game!').send()
-	SayText2('\x04[Zombie Riot] » For winning the game, the game is starting over!').send()
+	message.Won.send()
+	message.New.send()
 	_day = 1
     
 def respawn(userid):
@@ -369,7 +368,6 @@ def player_hurt(args):
 			if attacker > 0:
 				if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:
 					Player(index_from_userid(userid)).ignite(10.0)    
-                  
 
 #==================================
 # Menu Call Backs
@@ -442,7 +440,8 @@ def info_menu(userid):
 	menu.append(Text('- Lowers your gravity'))
 	menu.append(Text('- Increases Health/Speed per kill'))
 	menu.append(Text('- Increases Max health/speed limit'))
-	menu.append(Text('- 10% full clip restore chance whenn hurt'))
+	menu.append(Text('- 10% full clip restore chance when hurt'))
+	menu.append(Text('- Requires: %s clan_tag' % (clan)))
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(8, 'Back', 'Back'))
 	menu.append(SimpleOption(0, 'Close', None))
