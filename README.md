@@ -6,6 +6,8 @@ In order to win a day, you need to kill all zombies.
 
 This plugin requires <a href="https://forums.sourcepython.com/">Source.Python</a> to load.
 
+This plugin only supports Counter-Strike-Source
+
 Load Command: sp plugin load zr
 
 Currently have 11Days as max, but you can easyly add more.
