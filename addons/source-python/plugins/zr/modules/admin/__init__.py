@@ -9,13 +9,14 @@ from menus import PagedMenu, PagedOption
 from messages import SayText2
 from zr import zr
 
-admins = ['[U:1:182650578]']
+def get_admin(userid):
+	s_id = '%s' % (Player(index_from_userid(userid)).steamid)
+	steamid = '%s' % (Player(index_from_userid(userid)).steamid.replace('[', '').replace(']', ''))
+	return Player(index_from_userid(userid)).steamid == zr._admins[steamid]['steamid']
 
 def is_admin(userid):
-	if Player(index_from_userid(userid)).steamid in admins:
-		return True
-	return False
-    
+	return get_admin(userid)
+
 def adminmenu(userid):
 	menu = SimpleMenu()
 	if zr.is_queued(menu, index_from_userid(userid)):
@@ -63,19 +64,22 @@ def zombies_players_menu(userid):
 			menu.append(PagedOption('%s' % (Player(index_from_userid(i)).name), (i)))
 	menu.select_callback = zombie_menu_callback
 	menu.send(index_from_userid(userid))
+    
 def days_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
 		userid = userid_from_index(_index)
-		zr._day += choice
-		SayText2('\x04[Zombie Riot] » You have changed day to %s!' % (choice)).send(index_from_userid(userid))
+		if not zr._day > zr.max_day() and not zr._day >= zr.max_day():
+			zr._day += choice
+			SayText2('\x04[Zombie Riot] » You have changed day to %s!' % (choice)).send(index_from_userid(userid))
 
 def remove_days_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
 		userid = userid_from_index(_index)
-		zr._day -= choice
-		SayText2('\x04[Zombie Riot] » You have removed %s days!' % (choice)).send(index_from_userid(userid))
+		if not zr._day > 0 and not zr._day < 0:
+			zr._day -= choice
+			SayText2('\x04[Zombie Riot] » You have removed %s days!' % (choice)).send(index_from_userid(userid))
 
 def admin_menu_callback(_menu, _index, _option):
 	choice = _option.value
@@ -85,7 +89,7 @@ def admin_menu_callback(_menu, _index, _option):
 			zomnbies_menu(userid)
 		elif choice == 'day':
 			day_menu(userid, 'add')
-		elif choice == 'remove':
+		elif choice == 'day_remove':
 			day_menu(userid, 'remove')
 		elif choice == 'beacon':
 			zombies_players_menu(userid)
@@ -95,12 +99,12 @@ def zombie_menu_callback(_menu, _index, _option):
 	if choice:
 		userid = userid_from_index(_index)
 		player = Player(index_from_userid(userid))
-		player.delay(2, beacon, (choice,))
+		player.delay(1, beacon, (choice,))
 
 def beacon(userid):
 	if zr.isAlive(userid):
 		player = Player(index_from_userid(userid))
-		player.delay(2, beacon, (userid,))
+		player.delay(1, beacon, (userid,))
 		player.emit_sound(sample='buttons/blip1.wav',volume=1.0,attenuation=0.5)
 		if player.team == 2:
 			r = 235

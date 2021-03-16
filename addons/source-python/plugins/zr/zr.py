@@ -38,6 +38,7 @@ from zr.modules import version
 from zr.modules import message
 
 __FILEPATH__    = path.Path(__file__).dirname()
+_admins = ConfigObj(__FILEPATH__ + '/_admins.ini')
 _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
 download = os.path.join(__FILEPATH__ + '/css.txt')
 
