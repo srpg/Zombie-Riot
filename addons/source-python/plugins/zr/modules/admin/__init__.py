@@ -10,9 +10,8 @@ from messages import SayText2
 from zr import zr
 
 def get_admin(userid):
-	s_id = '%s' % (Player(index_from_userid(userid)).steamid)
-	steamid = '%s' % (Player(index_from_userid(userid)).steamid.replace('[', '').replace(']', ''))
-	return Player(index_from_userid(userid)).steamid == zr._admins[steamid]['steamid']
+	player = Player(index_from_userid(userid))
+	return zr.admins.get(player.steamid.lstrip('[').rstrip(']'))
 
 def is_admin(userid):
 	return get_admin(userid)
