@@ -6,6 +6,7 @@ from filters.weapons import WeaponClassIter
 from weapons.manager import weapon_manager
 from messages import SayText2
 from zr import zr
+from zr.modules import message
 
 def weapons_menu(userid):
 	menu = SimpleMenu()
