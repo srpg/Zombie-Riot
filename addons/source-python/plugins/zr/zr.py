@@ -276,6 +276,8 @@ def player_death(args):
 					_value -= 1
 					if attacker == userid: # Did zombie kill himself, Should fix fire kills not removing values
 						_value -= 1
+						if _value > 19:
+							Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
 				if player.team == 3: 
 					_humans -= 1
 					if _humans > 0:
