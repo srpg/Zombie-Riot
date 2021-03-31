@@ -274,6 +274,8 @@ def player_death(args):
 				player = Player(index_from_userid(userid))
 				if player.is_bot():
 					_value -= 1
+					if attacker == userid: # Did zombie kill himself, Should fix fire kills not removing values
+						_value -= 1
 				if player.team == 3: 
 					_humans -= 1
 					if _humans > 0:
