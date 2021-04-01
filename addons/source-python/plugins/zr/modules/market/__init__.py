@@ -78,7 +78,9 @@ def secondary_menu_callback(_menu, _index, _option):
 			if secondary:
 				secondary.remove()
 			player.give_named_item('%s' % (choice.name))
-			SayText2('\x04[Zombie Riot] » You have bought %s with %s$' % (choice.basename.upper(), choice.cost)).send(_index)
+			weapons = '%s' % (choice.basename.upper())
+			price = '%s' % (choice.cost)
+			message.Weapon.send(_index, weapon=weapons, cost=price)
 		else:
 			SayText2('\x04[Zombie Riot] » You need to be alive for buy weapon').send(_index)
             
@@ -93,6 +95,8 @@ def primary_menu_callback(_menu, _index, _option):
 			if primary:
 				primary.remove()
 			player.give_named_item('%s' % (choice.name))
-			Weapon.send(_index, name='%s', cost='%s' % (choice.basename.upper(), choice.cost))#SayText2('\x04[Zombie Riot] » You have bought %s with %s$' % (choice.basename.upper(), choice.cost)).send(_index)
+			weapons = '%s' % (choice.basename.upper())
+			price = '%s' % (choice.cost)
+			message.Weapon.send(_index, weapon=weapons, cost=price)
 		else:
 			SayText2('\x04[Zombie Riot] » You need to be alive for buy weapon').send(_index)
