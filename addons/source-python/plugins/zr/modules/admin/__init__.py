@@ -11,7 +11,7 @@ from zr import zr
 
 def get_admin(userid):
 	player = Player(index_from_userid(userid))
-	return zr._admins.get(player.steamid.lstrip('[').rstrip(']'))))
+	return zr._admins.get(player.steamid.lstrip('[').rstrip(']'))
 
 def is_admin(userid):
 	return get_admin(userid)
