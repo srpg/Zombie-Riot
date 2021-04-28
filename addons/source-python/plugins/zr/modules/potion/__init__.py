@@ -18,8 +18,8 @@ def potion_market_menu(userid):
 	menu.append(SimpleOption(4, 'Full Speed[12000$]', 'full_speed', player.cash >= 12000 and zr.isAlive(userid), player.cash >= 12000 and zr.isAlive(userid)))
 	menu.append(SimpleOption(5, 'Half Speed[6000$]', 'half_speed', player.cash >= 6000 and zr.isAlive(userid), player.cash >= 6000 and zr.isAlive(userid)))
 	menu.append(SimpleOption(6, '25% Of Speed[3000$]', '25_speed', player.cash >= 3000 and zr.isAlive(userid), player.cash >= 3000 and zr.isAlive(userid)))
-	menu.append(SimpleOption(7, 'Full Bullets[16000$]', 'full_bullets', player.cash >= 16000 and zr.isAlive(userid), player.cash >= 16000 and zr.isAlive(userid)))
-	menu.append(SimpleOption(8, 'Full Bullets[16000$]', 'infi_bullets', player.cash >= 30000 and zr.isAlive(userid), player.cash >= 30000 and zr.isAlive(userid)))
+	menu.append(SimpleOption(7, 'Full Bullets[14000$]', 'full_bullets', player.cash >= 14000 and zr.isAlive(userid), player.cash >= 14000 and zr.isAlive(userid)))
+	menu.append(SimpleOption(8, 'Infinity Bullets[16000$]', 'infi_bullets', player.cash >= 16000 and zr.isAlive(userid), player.cash >= 16000 and zr.isAlive(userid)))
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = potion_menu_callback
@@ -55,7 +55,7 @@ def potion_menu_callback(_menu, _index, _option):
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
 		elif choice == 'full_bullets':
 			if zr.isAlive(userid):
-				player.cash -= 16000
+				player.cash -= 14000
 				weapon = player.active_weapon
 				primary = player.primary
 				secondary = player.secondary
@@ -67,7 +67,7 @@ def potion_menu_callback(_menu, _index, _option):
 				elif weapon == secondary:
 					weapon.clip = max_clip
 					weapon.ammo = max_ammo
-				SayText2('\x04[Zombie Riot] » You have bought full bullets with 16000$').send(_index)
+				SayText2('\x04[Zombie Riot] » You have bought full bullets with 14000$').send(_index)
 			else:
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy full bullets').send(_index)
 		elif choice == '25_speed':
@@ -95,9 +95,9 @@ def potion_menu_callback(_menu, _index, _option):
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy speed potion').send(_index)
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
-				player.cash -= 30000
+				player.cash -= 16000
 				global _infity
 				_infity = True
-				SayText2('\x04[Zombie Riot] » You have bought Infinity Bullets with 30000$').send(_index)
+				SayText2('\x04[Zombie Riot] » You have bought Infinity Bullets with 16000$').send(_index)
 			else:
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy Infinity Bullets potion').send(_index)
