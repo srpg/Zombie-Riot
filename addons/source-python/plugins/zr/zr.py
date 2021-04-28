@@ -56,7 +56,7 @@ info_panel = 1 # Enable left side of screen keyhint
 #===================
 # Def/Global functions
 #===================
-clan = ['[Best RPG]']# Currently let use [Best RPG] for clan tag features
+clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Currently let use [Best RPG] for clan tag features
 
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
