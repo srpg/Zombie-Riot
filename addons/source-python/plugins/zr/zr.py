@@ -21,6 +21,7 @@ from commands.server import ServerCommand
 from configobj import ConfigObj
 # Weapon
 from filters.weapons import WeaponClassIter, WeaponIter
+from weapons.manager import weapon_manager
 # Messages
 from messages import TextMsg, HudMsg, SayText2
 # Download
@@ -120,6 +121,7 @@ def zombie_version(command):
 
 def load():
 	global _loaded
+	global _infity
 	global _value
 	global _humans
 	global _health
@@ -129,6 +131,7 @@ def load():
 			_value = 0
 			_humans = 0
 			_health = 100
+			_infity = False
 			global _day
 			_day = 1
 			echo_console('***********************************************************')
@@ -239,7 +242,14 @@ def round_start(args):
 			echo_console('[Zombie Riot] Current Zombies Health: %s' % (_health))
 		echo_console('[Zombie Riot] Current Humans: %s' % (_humans))
 		echo_console('***********************************************************')
-    
+
+@Event('round_end')
+def round_end(args):
+	global _loaded
+	global _infity
+	if _loaded > 0:
+		_infity = False
+
 @Event('player_team')
 def player_team(args):
 	global _loaded
@@ -288,6 +298,23 @@ def player_death(args):
 						if _value > 19:
 							Delay(0.1, respawn, (userid,))
 
+@Event('weapon_fire')
+def weapon_fire(args):
+	global _loaded
+	global _infity
+	if _loaded > 0:
+		if _infity:
+			userid = args.get_int('userid')
+			player = Player(index_from_userid(userid))
+			primary = player.primary
+			secondary = player.secondary
+			weapon = player.active_weapon
+			max_clip = weapon_manager[weapon.classname].clip
+			if weapon == primary:
+				weapon.clip = max_clip
+			elif weapon == secondary:
+				weapon.clip = max_clip
+			
 @Event('weapon_fire_on_empty')
 def weapon_fire_on_empty(args):
 	global _loaded
