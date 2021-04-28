@@ -1,3 +1,4 @@
+from events import Event
 from players.entity import Player
 from players.helpers import index_from_userid, userid_from_index
 from menus import SimpleMenu, SimpleOption, Text
@@ -101,3 +102,23 @@ def potion_menu_callback(_menu, _index, _option):
 				SayText2('\x04[Zombie Riot] » You have bought Infinity Bullets with 16000$').send(_index)
 			else:
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy Infinity Bullets potion').send(_index)
+
+@Event('round_end')
+def round_end(args):
+	global _infity
+	_infity = False
+
+@Event('weapon_fire')
+def weapon_fire(args):
+	global _infity
+	if _infity:
+		userid = args.get_int('userid')
+		player = Player(index_from_userid(userid))
+		primary = player.primary
+		secondary = player.secondary
+		weapon = player.active_weapon
+		max_clip = weapon_manager[weapon.classname].clip
+		if weapon == primary:
+			weapon.clip = max_clip
+		elif weapon == secondary:
+			weapon.clip = max_clip
