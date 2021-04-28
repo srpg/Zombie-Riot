@@ -96,8 +96,8 @@ def potion_menu_callback(_menu, _index, _option):
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
 				player.cash -= 30000
-				global zr._infity
-				zr._infity = True
+				global _infity
+				_infity = True
 				SayText2('\x04[Zombie Riot] » You have bought Infinity Bullets with 30000$').send(_index)
 			else:
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy Infinity Bullets potion').send(_index)
