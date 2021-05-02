@@ -257,7 +257,7 @@ def player_team(args):
 @Event('player_disconnect')
 def player_disconnect(args):
 	userid = args.get_int('userid')
-	if Player(index_from_userid(userid)).team == 3:
+	if Player(index_from_userid(userid)).team == 3 and isAlive(userid):
 		global _loaded
 		if _loaded > 0:
 			global _humans
@@ -296,7 +296,7 @@ def weapon_fire_on_empty(args):
 	global _loaded
 	if _loaded > 0:
 		userid = args.get_int('userid')
-		player = Player(index_from_userid(userid))
+		player = Player.from_userid(userid)
 		if player.primary:
 			player.primary.remove()
 		elif player.secondary:
@@ -317,7 +317,7 @@ def winner():
 	_day = 1
     
 def respawn(userid):
-	player = Player(index_from_userid(userid))
+	player = Player.from_userid(userid)
 	player.spawn(True)
 
 def timer(userid, duration, count):
