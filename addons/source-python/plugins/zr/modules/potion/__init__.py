@@ -97,22 +97,28 @@ def potion_menu_callback(_menu, _index, _option):
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
 				player.cash -= 16000
-				global _infity
-				_infity = True
+				user = zr.ZombiePlayer.from_userid(userid)
+				user.consecutive_bullets = True
 				SayText2('\x04[Zombie Riot] » You have bought Infinity Bullets with 16000$').send(_index)
 			else:
 				SayText2('\x04[Zombie Riot] » You need to be alive for buy Infinity Bullets potion').send(_index)
 
 @Event('round_end')
 def round_end(args):
-	global _infity
-	_infity = False
+	for i in zr.getUseridList():
+		user = zr.ZombiePlayer.from_userid(i)
+		user.consecutive_bullets = False
+
+@Event('player_death')
+def player_death(args):
+	victim = zr.ZombiePlayer.from_userid(args['userid'])
+	victim.consecutive_bullets = False
 
 @Event('weapon_fire')
 def weapon_fire(args):
-	global _infity
-	if _infity:
-		userid = args.get_int('userid')
+	userid = args.get_int('userid')
+	user = zr.ZombiePlayer.from_userid(userid)
+	if user.consecutive_bullets:
 		player = Player(index_from_userid(userid))
 		primary = player.primary
 		secondary = player.secondary

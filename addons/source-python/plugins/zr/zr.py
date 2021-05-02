@@ -38,7 +38,6 @@ from zr.modules import version
 from zr.modules import message
 
 __FILEPATH__    = path.Path(__file__).dirname()
-_admins = ConfigObj(__FILEPATH__ + '/_admins.ini')
 _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
 download = os.path.join(__FILEPATH__ + '/css.txt')
 
@@ -58,6 +57,13 @@ info_panel = 1 # Enable left side of screen keyhint
 #===================
 clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Currently let use [Best RPG] for clan tag features
 
+class ZombiePlayer(Player):
+	caching = True # Uses caching
+
+	def __init__(self, index):
+		super().__init__(index)
+		self.consecutive_bullets = False
+
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
 
@@ -76,19 +82,14 @@ def getUseridList():
 _HUDMSG_COLOR = Color(255, 255, 255)
 _HUDMSG_X = 0.02
 _HUDMSG_Y = 0.3
-_HUDMSG_EFFECT = 0
-_HUDMSG_FADEOUT = 0
-_HUDMSG_HOLDTIME = 2
-_HUDMSG_FXTIME = 0
-_HUDMSG_CHANNEL = 3
 	
 def hudmessage(userid, text):
 	HudMsg(text, color1=_HUDMSG_COLOR, x=_HUDMSG_X, y=_HUDMSG_Y,
-		effect=_HUDMSG_EFFECT,
-		fade_out=_HUDMSG_FADEOUT,
-		hold_time=_HUDMSG_HOLDTIME,
-		fx_time=_HUDMSG_FXTIME,
-		channel=_HUDMSG_CHANNEL
+		effect=0,
+		fade_out=0,
+		hold_time=2,
+		fx_time=0,
+		channel=4
 	).send(index_from_userid(userid))
 
 def centertell(userid, text):
@@ -464,7 +465,7 @@ def main_menu(userid):
 	menu.append(SimpleOption(1, 'Weapons', 'weapon'))
 	menu.append(SimpleOption(2, 'Potions', 'potion'))
 	menu.append(SimpleOption(3, 'Info', 'info'))
-	if admin.is_admin(userid):
+	if admin.get_admin(userid):
 		menu.append(SimpleOption(4, 'Admin', 'admin_menu'))
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(0, 'Close', None))

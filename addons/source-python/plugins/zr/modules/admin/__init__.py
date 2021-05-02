@@ -1,3 +1,5 @@
+import path
+from configobj import ConfigObj
 from players.entity import Player
 from engines.server import engine_server
 from mathlib import Vector
@@ -9,13 +11,13 @@ from menus import PagedMenu, PagedOption
 from messages import SayText2
 from zr import zr
 
+__FILEPATH__	= path.Path(__file__).dirname()
+admins = ConfigObj(__FILEPATH__ + '/_admins.ini')
+
 def get_admin(userid):
 	player = Player(index_from_userid(userid))
-	return zr._admins.get(player.steamid.lstrip('[').rstrip(']'))
-
-def is_admin(userid):
-	return get_admin(userid)
-
+	return admins.get(player.steamid.lstrip('[').rstrip(']'))
+ 
 def adminmenu(userid):
 	menu = SimpleMenu()
 	if zr.is_queued(menu, index_from_userid(userid)):
