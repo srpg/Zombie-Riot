@@ -272,23 +272,23 @@ def player_death(args):
 		global _day
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
+		victim = Player.from_userid(userid)
+		killer = Player.from_userid(attacker)# Use instead args['attacker']?
 		if attacker > 0:
-			if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)):
-				player = Player(index_from_userid(userid))
-				if player.is_bot():
+			if not victim.team == killer.team:
+				if victim.is_bot():
 					_value -= 1
-					Player(index_from_userid(attacker)).cash += 1000
 					if attacker == userid: # Did zombie kill himself, Should fix fire kills not removing values
 						_value -= 1
 						if _value > 19:
 							Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
-				if player.team == 3: 
+				if victim.team == 3: 
 					_humans -= 1
 					if _humans > 0:
-						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 30, 1))
+						victim.delay(0.1, timer, (userid, 30, 1))
 				if _humans > 0:
 					Delay(0.1, won)
-					if player.team == 2:
+					if victim.team == 2:
 						if _value > 19:
 							Delay(0.1, respawn, (userid,))
 @Event('weapon_fire_on_empty')
@@ -373,9 +373,11 @@ def player_hurt(args):
 		if args.get_string('weapon') == 'hegrenade' and fire:
 			userid = args.get_int('userid')
 			attacker = args.get_int('attacker')
+			victim = Player.from_userid(userid)
+			killer = Player.from_userid(attacker)
 			if attacker > 0:
-				if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:
-					Player(index_from_userid(userid)).ignite(10.0)    
+				if not victim.team == killer.team:
+					victim.ignite(10.0)    
 
 #==================================
 # Menu Call Backs
