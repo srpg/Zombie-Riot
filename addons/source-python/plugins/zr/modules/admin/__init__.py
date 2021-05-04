@@ -16,7 +16,7 @@ admins = ConfigObj(__FILEPATH__ + '/_admins.ini')
 
 def get_admin(userid):
 	player = Player(index_from_userid(userid))
-	return admins.get(player.steamid.lstrip('[').rstrip(']'))
+	return player.steamid.lstrip('[').rstrip(']') in admins
  
 def adminmenu(userid):
 	menu = SimpleMenu()
