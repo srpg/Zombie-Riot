@@ -2,6 +2,8 @@
 import os, path, random
 # Core
 from core import GAME_NAME, echo_console
+#Entity
+from entities.entity import Entity
 # Events
 from events import Event
 from events.hooks import PreEvent, EventAction
@@ -275,13 +277,17 @@ def player_death(args):
 		victim = Player.from_userid(userid)
 		killer = Player.from_userid(attacker)# Use instead args['attacker']?
 		if attacker > 0:
-			if not victim.team == killer.team:
-				if victim.is_bot():
+			if victim.is_bot():
+				if userid == attacker: # Did zombie kill himself, Should fix fire kills not removing values
 					_value -= 1
-					if attacker == userid: # Did zombie kill himself, Should fix fire kills not removing values
-						_value -= 1
-						if _value > 19:
-							Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
+					if _value > 19:
+						Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
+			if not victim.is_bot():
+				if userid == attacker: # Did player suicide
+					_humans -= 1
+					if _humans > 0:
+						victim.delay(0.1, timer, (userid, 30, 1))
+			if not victim.team == killer.team:
 				if victim.team == 3: 
 					_humans -= 1
 					if _humans > 0:
@@ -315,21 +321,29 @@ def winner():
 	message.Won.send()
 	message.New.send()
 	_day = 1
-    
+
+def burn(userid, duration):
+	try:
+		Entity(index_from_userid(userid)).call_input('IgniteLifetime', float(duration))
+	except ValueError:
+		pass
+
 def respawn(userid):
 	player = Player.from_userid(userid)
 	player.spawn(True)
 
 def timer(userid, duration, count):
-	if not isAlive(userid):
-		player = Player(index_from_userid(userid))
-		if player.team == 3:
-			centertell(userid, 'You will respawn in %s Seconds' % (duration - (count)))
-			count += 1
-			if count == duration:
-				player.delay(0.1, respawn, (userid,))
-			else:
-				player.delay(1, timer, (userid, duration, count))
+	global _humans
+	if _humans > 0:
+		if not isAlive(userid):
+			player = Player(index_from_userid(userid))
+			if player.team == 3:
+				centertell(userid, 'You will respawn in %s Seconds' % (duration - (count)))
+				count += 1
+				if count == duration:
+					player.delay(0.1, respawn, (userid,))
+				else:
+					player.delay(1, timer, (userid, duration, count))
 
 def init_loop():
 	global hint
@@ -377,7 +391,7 @@ def player_hurt(args):
 			killer = Player.from_userid(attacker)
 			if attacker > 0:
 				if not victim.team == killer.team:
-					victim.ignite(10.0)    
+					burn(userid, 10)   
 
 #==================================
 # Menu Call Backs
