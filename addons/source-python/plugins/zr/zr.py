@@ -55,7 +55,7 @@ info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disable
 #===================
 # Def/Global functions
 #===================
-clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Changed inside of ('You clan_tag') to enable your clan tag features, currently it enable features to [Best RPG] clan_tag
+clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Change inside of ('You clan_tag') to enable your clan tag features, currently it enable features to [Best RPG] clan_tag
 
 class ZombiePlayer(Player):
 	caching = True # Uses caching
