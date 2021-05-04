@@ -49,15 +49,13 @@ weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 # Config
 #=====================
 server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
-fire = 0 # Enable firegrenades, there is bug if dies to fire, it won't reduce amount of zombies
-info_panel = 1 # Enable left side of screen keyhint
-
-
+fire = 0 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
+info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disabled
 
 #===================
 # Def/Global functions
 #===================
-clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Currently let use [Best RPG] for clan tag features
+clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Changed inside of ('You clan_tag') to enable your clan tag features, currently it enable features to [Best RPG] clan_tag
 
 class ZombiePlayer(Player):
 	caching = True # Uses caching
@@ -80,13 +78,9 @@ def remove_idle_weapons():
 def getUseridList():
 	for i in PlayerIter.iterator():
 		yield i.userid
-
-_HUDMSG_COLOR = Color(255, 255, 255)
-_HUDMSG_X = 0.02
-_HUDMSG_Y = 0.3
 	
 def hudmessage(userid, text):
-	HudMsg(text, color1=_HUDMSG_COLOR, x=_HUDMSG_X, y=_HUDMSG_Y,
+	HudMsg(text, color1=Color(255,255,255), x=0.02, y=0.3,
 		effect=0,
 		fade_out=0,
 		hold_time=2,
