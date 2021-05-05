@@ -69,8 +69,14 @@ class ZombiePlayer(Player):
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
 
+def zombies():
+	return len(PlayerIter(['t', 'all']))
+
 def real_count():
 	return alive() # Apperently this code counts basic amount of ct's
+
+def real_zombies():
+	return zombies()
 
 def remove_idle_weapons():
 	for w in WeaponIter.iterator():
@@ -309,7 +315,7 @@ def player_death(args):
 					Delay(0.1, won)
 					if victim.team == 2:
 						_value -= 1
-						if _value > 19:
+						if _value > 19 or zombies() < _value:
 							Delay(0.1, respawn, (userid,))
 @Event('weapon_fire_on_empty')
 def weapon_fire_on_empty(args):
