@@ -62,7 +62,9 @@ class ZombiePlayer(Player):
 
 	def __init__(self, index):
 		super().__init__(index)
-		self.consecutive_bullets = False
+		self.consecutive_bullets 	= False
+		self.joined_team 		= False
+		self.welcome_message 		= False
 
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
@@ -211,6 +213,10 @@ def player_spawn(args):
 		player.noblock = True
 		player.cash = 12000
 		if player.team == 3:
+			zr_player = ZombiePlayer.from_userid(args['userid'])
+			if not zr_player.welcome_message:
+				message.welcome.send(player.index, ver=version.Ver) # Welcome message
+				zr_player.welcome_message = True
 			global _humans
 			_humans += 1
 			message.Game.send(player.index)
@@ -239,6 +245,14 @@ def round_start(args):
 		echo_console('[Zombie Riot] Current Humans: %s' % (_humans))
 		echo_console('***********************************************************')
 
+@Event('player_activate')
+def player_activate(args):
+	global _loaded
+	if _loaded > 0:
+		player = ZombiePlayer.from_userid(args['userid'])
+		player.joined_team = False
+		player.welcome_message = False
+
 @Event('player_team')
 def player_team(args):
 	global _loaded
@@ -248,7 +262,12 @@ def player_team(args):
 		if _humans > 0:
 			if not isAlive(userid):
 				if args.get_int('team') == 3: # Is ct
-					Player(index_from_userid(userid)).delay(0.1, timer, (userid, 10, 1))
+					player = ZombiePlayer.from_userid(userid)
+					if not player.joined_team:
+						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 10, 1))
+						player.joined_team = True
+					else:
+						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 30, 1))
 
 @Event('player_disconnect')
 def player_disconnect(args):
