@@ -308,6 +308,7 @@ def player_death(args):
 				if _humans > 0:
 					Delay(0.1, won)
 					if victim.team == 2:
+						_value -= 1
 						if _value > 19:
 							Delay(0.1, respawn, (userid,))
 @Event('weapon_fire_on_empty')
