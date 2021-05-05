@@ -315,7 +315,7 @@ def player_death(args):
 					Delay(0.1, won)
 					if victim.team == 2:
 						_value -= 1
-						if _value > 19 or zombies() < _value:
+						if _value > 19 or real_zombies() < _value:
 							Delay(0.1, respawn, (userid,))
 @Event('weapon_fire_on_empty')
 def weapon_fire_on_empty(args):
