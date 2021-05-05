@@ -69,14 +69,12 @@ class ZombiePlayer(Player):
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
 
-def zombies():
-	return len(PlayerIter(['t', 'all']))
-
+def alive_zombies():
+	return len(PlayerIter(['t', 'alive']))
+    
 def real_count():
 	return alive() # Apperently this code counts basic amount of ct's
 
-def real_zombies():
-	return zombies()
 
 def remove_idle_weapons():
 	for w in WeaponIter.iterator():
@@ -299,7 +297,7 @@ def player_death(args):
 			if victim.is_bot():
 				if userid == attacker: # Did zombie kill himself, Should fix fire kills not removing values
 					_value -= 1
-					if _value > 19:
+					if not _value == alive_zombies():
 						Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
 			if not victim.is_bot():
 				if userid == attacker: # Did player suicide
@@ -315,7 +313,7 @@ def player_death(args):
 					Delay(0.1, won)
 					if victim.team == 2:
 						_value -= 1
-						if _value > 19 or real_zombies() < _value:
+						if not _value == alive_zombies(): # Works better than if _value > 19
 							Delay(0.1, respawn, (userid,))
 @Event('weapon_fire_on_empty')
 def weapon_fire_on_empty(args):
