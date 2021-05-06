@@ -150,7 +150,7 @@ def load():
 			echo_console('[Zombie Riot] Clan Tag: %s' % (clan))
 			init_loop()
 			echo_console('[Zombie Riot] Author: F1N/srpg')
-			echo_console('[Zombie Riot] Version: Stable') # Beta
+			echo_console('[Zombie Riot] Version: Beta')
 			echo_console('[Zombie Riot] Loaded Completely')
 			queue_command_string('mp_restartgame 1')
 			echo_console('***********************************************************')
