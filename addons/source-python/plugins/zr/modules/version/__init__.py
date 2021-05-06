@@ -1,3 +1,4 @@
+import urllib
 from io import BytesIO
 from path import Path
 from paths import GAME_PATH
@@ -6,18 +7,22 @@ from zipfile import ZipFile
 from core import echo_console
 from commands.server import ServerCommand
 
-Ver = '1.2.5'
-new_version = ('http://cssbestrpg.online/version.txt')
+Ver = '1.2.6'
+new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
 def version_checker(timeout=3):
-	with urlopen(new_version, timeout=timeout) as url:
-		return url.read().decode('utf-8')
-
+	try:
+		with urlopen(new_version, timeout=timeout) as url:
+			return url.read().decode('utf-8')
+	except urllib.error.URLError:
+		print('[Zombie Riot] Currently website is down, you have to manually temporally download new version from github!')
+		return '%s' % (Ver)
+        
 def check_version():
 	if version_checker() > Ver:
 		echo_console('[Zombie Riot] There is new version available to download!')
-		echo_console('[Zombie Riot] Type in console zombie_download to download new version')
+		echo_console('[Zombie Riot] Type in console zr_update to download new version')
 	else:
 		echo_console('[Zombie Riot] There is no new version available!')
 
@@ -33,8 +38,8 @@ def download(timeout=3):
 				with open(path, 'wb') as f:
 					f.write(zipfile.read(filename))
 
-@ServerCommand('zombie_download')
-def zombie_downloadd(command):
+@ServerCommand('zr_update')
+def zr_update(command):
 	if version_checker() > Ver:
 		download()
 		echo_console('[Zombie Riot] You have downloaded newest version of the plugin. Restart a server to apply changes')
