@@ -16,7 +16,7 @@ def version_checker(timeout=3):
 		with urlopen(new_version, timeout=timeout) as url:
 			return url.read().decode('utf-8')
 	except urllib.error.URLError:
-		print('[Zombie Riot] Currently website is down, you have to manually temporally download new version from github!')
+		print('[Zombie Riot] Currently the website is down that host version checker, you have to check yourself new version from github!')
 		return '%s' % (Ver)
         
 def check_version():
@@ -42,6 +42,6 @@ def download(timeout=3):
 def zr_update(command):
 	if version_checker() > Ver:
 		download()
-		echo_console('[Zombie Riot] You have downloaded newest version of the plugin. Restart a server to apply changes')
+		echo_console('[Zombie Riot] You have downloaded newest version of the plugin. Restart a server to apply changes or reload plugin')
 	else:
 		echo_console('[Zombie Riot] There is no new version available to download')
