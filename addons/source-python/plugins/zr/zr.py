@@ -29,6 +29,7 @@ from messages import TextMsg, HintText
 from stringtables.downloads import Downloadables
 # Color
 from colors import Color
+from colors import GREEN, LIGHT_GREEN, RED
 # Menus
 from menus import Text, SimpleMenu, PagedMenu, SimpleOption
 # Own Modules
@@ -55,6 +56,10 @@ info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disable
 #===================
 # Def/Global functions
 #===================
+red         = RED
+green       = GREEN
+light_green = LIGHT_GREEN
+
 clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Change inside of ('You clan_tag') to enable your clan tag features, currently it enable features to [Best RPG] clan_tag
 
 class ZombiePlayer(Player):
@@ -213,12 +218,12 @@ def player_spawn(args):
 		if player.team == 3:
 			zr_player = ZombiePlayer.from_userid(args['userid'])
 			if not zr_player.welcome_message:
-				message.welcome.send(player.index, ver=version.Ver) # Welcome message
+				message.welcome.send(player.index, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				zr_player.welcome_message = True
 			global _humans
 			_humans += 1
-			message.Game.send(player.index)
-			message.Market.send(player.index)
+			message.Game.send(player.index,green=green,light_green=light_green)
+			message.Market.send(player.index,green=green,light_green=light_green)
 
 @Event('round_start')
 def round_start(args):
@@ -330,8 +335,8 @@ def won():
             
 def winner():
 	global _day
-	message.Won.send()
-	message.New.send()
+	message.Won.send(red=red,green=green,light_green=light_green)
+	message.New.send(red=red,green=green,light_green=light_green)
 	_day = 1
 
 def burn(userid, duration):

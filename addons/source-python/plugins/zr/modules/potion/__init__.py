@@ -35,25 +35,25 @@ def potion_menu_callback(_menu, _index, _option):
 			if zr.isAlive(userid):
 				player.health += player.max_health
 				player.cash -= 12000
-				SayText2('\x04[Zombie Riot] » You have bought full health with 12000$').send(_index)
+				message.Potion.send(_index, type="full health", price=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
+				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'half_health':
 			if zr.isAlive(userid):
 				bonus = int(player.max_health / 2)
 				player.health += bonus
 				player.cash -= 6000
-				SayText2('\x04[Zombie Riot] » You have bought half health with 6000$').send(_index)
+				message.Potion.send(_index, type="half health", price=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
+				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_health':
 			if zr.isAlive(userid):
 				bonus = int(player.max_health / 4)
 				player.health += bonus
 				player.cash -= 3000
-				SayText2('\x04[Zombie Riot] » You have bought 25% health with 3000$').send(_index)
+				message.Potion.send(_index, type="25% health", price=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy health potion').send(_index)
+				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_bullets':
 			if zr.isAlive(userid):
 				player.cash -= 14000
@@ -68,40 +68,40 @@ def potion_menu_callback(_menu, _index, _option):
 				elif weapon == secondary:
 					weapon.clip = max_clip
 					weapon.ammo = max_ammo
-				SayText2('\x04[Zombie Riot] » You have bought full bullets with 14000$').send(_index)
+				message.Potion.send(_index, type="full bullets", price=14000, green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy full bullets').send(_index)
+				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
 			if zr.isAlive(userid):
 				bonus = player.speed / 4
 				player.speed += bonus
 				player.cash -= 3000
-				SayText2('\x04[Zombie Riot] » You have bought 25% speed with 3000$').send(_index)
+				message.Potion.send(_index, type="25% speed", price=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy speed potion').send(_index)
+				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'half_speed':
 			if zr.isAlive(userid):
 				bonus = player.speed / 2
 				player.speed += bonus
 				player.cash -= 6000
-				SayText2('\x04[Zombie Riot] » You have bought half speed with 6000$').send(_index)
+				message.Potion.send(_index, type="half speed", price=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy speed potion').send(_index)
+				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_speed':
 			if zr.isAlive(userid):
 				player.speed += player.speed
 				player.cash -= 12000
-				SayText2('\x04[Zombie Riot] » You have bought full speed with 12000$').send(_index)
+				message.Potion.send(_index, type="full speed", price=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy speed potion').send(_index)
+				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
 				player.cash -= 16000
 				user = zr.ZombiePlayer.from_userid(userid)
 				user.consecutive_bullets = True
-				SayText2('\x04[Zombie Riot] » You have bought Infinity Bullets with 16000$').send(_index)
+				message.Potion.send(_index, type="infinity bullets", price=16000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for buy Infinity Bullets potion').send(_index)
+				message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 
 @Event('round_end')
 def round_end(args):

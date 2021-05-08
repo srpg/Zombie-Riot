@@ -59,9 +59,9 @@ def main_menu_callback(_menu, _index, _option):
 				elif weapon == secondary:
 					weapon.clip = max_clip
 					weapon.ammo = max_ammo
-				SayText2('\x04[Zombie Riot] » You have rebuy weapons bullets back with %s$' % (1000)).send(_index)
+				message.Rebuy.send(_index, weapon=weapon.classname.replace('weapon_', '', 1), cost=1000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
-				SayText2('\x04[Zombie Riot] » You need to be alive for weapons bullets rebuy').send(_index)
+				message.Alive.send(_index, type="rebuy bullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'secondary':
 			secondary_weapons_menu(userid)
 		elif choice == 'primary':
@@ -80,9 +80,9 @@ def secondary_menu_callback(_menu, _index, _option):
 			player.give_named_item('%s' % (choice.name))
 			weapons = '%s' % (choice.basename.upper())
 			price = '%s' % (choice.cost)
-			message.Weapon.send(_index, weapon=weapons, cost=price)
+			message.Weapon.send(_index, weapon=weapons, cost=price, red=zr.red,green=zr.green,light_green=zr.light_green)
 		else:
-			SayText2('\x04[Zombie Riot] » You need to be alive for buy weapon').send(_index)
+			message.Alive.send(_index, type=choice.basename.upper(), red=zr.red,green=zr.green,light_green=zr.light_green)
             
 def primary_menu_callback(_menu, _index, _option):
 	choice = _option.value
@@ -97,6 +97,6 @@ def primary_menu_callback(_menu, _index, _option):
 			player.give_named_item('%s' % (choice.name))
 			weapons = '%s' % (choice.basename.upper())
 			price = '%s' % (choice.cost)
-			message.Weapon.send(_index, weapon=weapons, cost=price)
+			message.Weapon.send(_index, weapon=weapons, cost=price, green=zr.green,light_green=zr.light_green)
 		else:
-			SayText2('\x04[Zombie Riot] » You need to be alive for buy weapon').send(_index)
+			message.Alive.send(_index, type=choice.basename.upper(), green=zr.green,light_green=zr.light_green)
