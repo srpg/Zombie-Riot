@@ -24,7 +24,7 @@ from configobj import ConfigObj
 # Weapon
 from filters.weapons import WeaponClassIter, WeaponIter
 # Messages
-from messages import TextMsg, HudMsg, SayText2
+from messages import TextMsg, HintText
 # Download
 from stringtables.downloads import Downloadables
 # Color
@@ -49,7 +49,7 @@ weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 # Config
 #=====================
 server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
-fire = 0 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
+fire = 1 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
 info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disabled
 
 #===================
@@ -75,6 +75,8 @@ def alive_zombies():
 def real_count():
 	return alive() # Apperently this code counts basic amount of ct's
 
+def hudhint(userid, text):
+	HintText(message=text).send(index_from_userid(userid))
 
 def remove_idle_weapons():
 	for w in WeaponIter.iterator():
@@ -85,15 +87,6 @@ def getUseridList():
 	for i in PlayerIter.iterator():
 		yield i.userid
 	
-def hudmessage(userid, text):
-	HudMsg(text, color1=Color(255,255,255), x=0.02, y=0.3,
-		effect=0,
-		fade_out=0,
-		hold_time=2,
-		fx_time=0,
-		channel=4
-	).send(index_from_userid(userid))
-
 def centertell(userid, text):
 	TextMsg(message=text, destination=4).send(index_from_userid(userid))
 
@@ -373,29 +366,18 @@ def stop_loop():
     
 def info():
 	init_loop()
-	temp_menu = PagedMenu()
-	temp_menu = SimpleMenu()
 	for i in getUseridList():
-		if not is_queued(temp_menu, index_from_userid(i)) and info_panel:
-			hudmessage(i, build_hudmessage(i))
+		if info_panel:
+			hudhint(i, build_hudmessage(i))
 
 def build_hudmessage(userid):
 	global _value
 	global _day
 	_health = get_health(_day)
-	__msg__ = 'Zombie Riot'
-	__msg__ += '\n\n'
-	__msg__ += 'Day: %s/%s' % (_day, max_day())
+	__msg__ = 'Day: %s/%s' % (_day, max_day())
 	__msg__ += '\nZombies: %s' % (_value)
 	__msg__ += '\nZombies Health: %s' % (_health)
 	__msg__ += '\nHumans: %s' % (_humans)
-	player = Player(index_from_userid(userid))
-	if player.clan_tag in clan and isAlive(userid):
-		__msg__ += '\n\n'
-		__msg__ += 'Health: %s/%s' % (player.health, player.max_health)
-		speed = '%s%s' % (int(player.speed / 1.0 * 100.0), '%')
-		__msg__ += '\nSpeed: %s' % (speed)
-		__msg__ += '\nGravity: %s%s' % (int(player.gravity / 1.0 * 100.0), '%')
 	return __msg__
 
 @Event('player_hurt')
