@@ -4,6 +4,7 @@ from players.helpers import index_from_userid, userid_from_index
 from menus import SimpleMenu, SimpleOption, Text
 from messages import SayText2
 from weapons.manager import weapon_manager
+from zr.modules import message
 from zr import zr
 
 def potion_market_menu(userid):
