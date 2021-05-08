@@ -139,6 +139,7 @@ def load():
 			queue_command_string('mp_autoteambalance 0')
 			queue_command_string('bot_chatter off')
 			queue_command_string('mp_humanteam ct')
+			queue_command_string('sv_hudhint_sound 0')
 			set_download()
 			echo_console('[Zombie Riot] Clan Tag: %s' % (clan))
 			init_loop()
