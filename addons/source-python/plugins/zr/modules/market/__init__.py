@@ -97,6 +97,6 @@ def primary_menu_callback(_menu, _index, _option):
 			player.give_named_item('%s' % (choice.name))
 			weapons = '%s' % (choice.basename.upper())
 			price = '%s' % (choice.cost)
-			message.Weapon.send(_index, weapon=weapons, cost=price, green=zr.green,light_green=zr.light_green)
+			message.Weapon.send(_index, weapon=weapons, cost=price, red=zr.red,green=zr.green,light_green=zr.light_green)
 		else:
 			message.Alive.send(_index, type=choice.basename.upper(), green=zr.green,light_green=zr.light_green)
