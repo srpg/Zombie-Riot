@@ -82,7 +82,7 @@ def secondary_menu_callback(_menu, _index, _option):
 			price = '%s' % (choice.cost)
 			message.Weapon.send(_index, weapon=weapons, cost=price, red=zr.red,green=zr.green,light_green=zr.light_green)
 		else:
-			message.Alive.send(_index, type=choice.basename.upper(), red=zr.red,green=zr.green,light_green=zr.light_green)
+			message.Alive.send(_index, type=choice.basename.upper(), green=zr.green,light_green=zr.light_green)
             
 def primary_menu_callback(_menu, _index, _option):
 	choice = _option.value

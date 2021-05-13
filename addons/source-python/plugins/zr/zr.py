@@ -172,6 +172,9 @@ def unload():
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).get_property_bool('pl.deadflag')
 
+show_win    = 'overlays/zr/humans_win'
+show_lose   = 'overlays/zr/zombies_win'
+
 def max_day():
 	return int(_CONFIG['Days']['value'])
 
@@ -314,6 +317,17 @@ def player_death(args):
 						_value -= 1
 						if not _value == alive_zombies(): # Works better than if _value > 19
 							Delay(0.1, respawn, (userid,))
+				if _value == 0: 
+					killer.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
+					killer.delay(3, cancel_overplay, (attacker.index,))
+				if _humans == 0:
+					victim.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
+					victim.delay(3, cancel_overplay, (victim.index,))
+
+def cancel_overplay(index):
+	player = Player(index)
+	player.client_command('r_screenoverlay 0')
+
 @Event('weapon_fire_on_empty')
 def weapon_fire_on_empty(args):
 	global _loaded

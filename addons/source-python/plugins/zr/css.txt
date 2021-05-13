@@ -81,3 +81,8 @@ models/player/zh/zh_zombie003.vvd
 
 models/player/slow/hunter/slow_hunter.mdl
 models/player/slow/berserkerin/slow.mdl
+
+materials/overlays/zr/zombies_win.vmt
+materials/overlays/zr/zombies_win.vtf
+materials/overlays/zr/humans_win.vmt
+materials/overlays/zr/zombies_win.vtf
