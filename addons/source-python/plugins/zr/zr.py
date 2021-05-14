@@ -2,7 +2,7 @@
 import os, path, random
 # Core
 from core import GAME_NAME, echo_console
-#Entity
+# Entity
 from entities.entity import Entity
 # Events
 from events import Event
@@ -32,6 +32,8 @@ from colors import Color
 from colors import GREEN, LIGHT_GREEN, RED
 # Menus
 from menus import Text, SimpleMenu, PagedMenu, SimpleOption
+# Listeners
+from listeners import OnLevelShutdown
 # Own Modules
 from zr.modules import admin
 from zr.modules import market 
@@ -197,6 +199,14 @@ def set_download():
 				continue
 			dl.add(line)
 
+@OnLevelShutdown
+def shutdown():
+	global _loaded
+	global _day
+	if _loaded > 0:
+		_day = 1
+    
+
 @Event('player_spawn')
 def player_spawn(args):
 	global _loaded
@@ -215,10 +225,11 @@ def player_spawn(args):
 			remove_idle_weapons()
 		player.noblock = True
 		player.cash = 12000
+		name = player.name
 		if player.team == 3:
 			zr_player = ZombiePlayer.from_userid(args['userid'])
 			if not zr_player.welcome_message:
-				message.welcome.send(player.index, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
+				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				zr_player.welcome_message = True
 			global _humans
 			_humans += 1
