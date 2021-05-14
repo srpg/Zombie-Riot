@@ -106,7 +106,8 @@ def potion_menu_callback(_menu, _index, _option):
 				message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'respawn':
 			if not zr.isAlive(userid) and zr._humans > 0:
-				player.delay(0.1, zr.timer, (userid, 0.1, 0))
+				player.delay(0.1, zr.timer, (userid, 0.1, 1))
+				player.cash -= 6000
 				message.Potion.send(_index, type="respawn", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
 				message.Dead.send(_index, green=zr.green,light_green=zr.light_green)
