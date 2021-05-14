@@ -22,7 +22,7 @@ def potion_market_menu(userid):
 	menu.append(SimpleOption(6, '25% Of Speed[3000$]', '25_speed', player.cash >= 3000 and zr.isAlive(userid), player.cash >= 3000 and zr.isAlive(userid)))
 	menu.append(SimpleOption(7, 'Full Bullets[14000$]', 'full_bullets', player.cash >= 14000 and zr.isAlive(userid), player.cash >= 14000 and zr.isAlive(userid)))
 	menu.append(SimpleOption(8, 'Infinity Bullets[16000$]', 'infi_bullets', player.cash >= 16000 and zr.isAlive(userid), player.cash >= 16000 and zr.isAlive(userid)))
-	menu.append(SimpleOption(9, 'Respawn[6000$]', 'respawn', player.cash >= 6000 and not zr.isAlive(userid), player.cash >= 6000 and not zr.isAlive(userid)))
+	menu.append(SimpleOption(9, 'Respawn[6000$]', 'respawn', player.cash >= 6000 and not zr.isAlive(userid) and zr._humans > 0, player.cash >= 6000 and not zr.isAlive(userid) and zr._humans > 0))
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = potion_menu_callback
