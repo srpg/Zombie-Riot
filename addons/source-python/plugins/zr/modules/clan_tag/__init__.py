@@ -9,7 +9,7 @@ from zr import zr
 def player_spawn(args):
 	userid = args.get_int('userid')
 	player = Player(index_from_userid(userid))
-	if player.clan_tag in zr.clan:
+	if player.clan_tag in zr.server_clan:
 		player.max_health += 25
 		player.health = player.max_health
 		player.speed += 0.10 # Increases 10% of speed
@@ -23,7 +23,7 @@ def player_death(args):
 	attacker = args.get_int('attacker')
 	if attacker > 0:
 		play = Player(index_from_userid(attacker))
-		if not play.is_bot() and play.clan_tag in zr.clan:
+		if not play.is_bot() and play.clan_tag in zr.server_clan:
 			if not play.max_health > 145:
 				play.max_health += 5
 			if not play.health > 145:
@@ -40,7 +40,7 @@ def player_hurt(args):
 	if attacker > 0:
 		if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:    
 			play = Player(index_from_userid(attacker))
-			if not play.is_bot() and play.clan_tag in zr.clan:
+			if not play.is_bot() and play.clan_tag in zr.server_clan:
 				chance = 10
 				if random.randint(1, 100) <= chance:
 					weapon = play.active_weapon
