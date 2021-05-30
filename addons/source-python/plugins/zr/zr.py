@@ -62,7 +62,9 @@ red         = RED
 green       = GREEN
 light_green = LIGHT_GREEN
 
-clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# Change inside of ('You clan_tag') to enable your clan tag features, currently it enable features to [Best RPG] clan_tag
+server_clan = ['[Best RPG]'] # Change here to activate clan tag
+
+clan = '%s' % ('[Best RPG]').replace("'", "").replace("'", "")# This is used menu to display which clan tag have using
 
 class ZombiePlayer(Player):
 	caching = True # Uses caching
