@@ -62,4 +62,4 @@ models/player/slow/berserkerin/slow.mdl
 materials/overlays/zr/zombies_win.vmt
 materials/overlays/zr/zombies_win.vtf
 materials/overlays/zr/humans_win.vmt
-materials/overlays/zr/zombies_
+materials/overlays/zr/zombies_win.vtf
