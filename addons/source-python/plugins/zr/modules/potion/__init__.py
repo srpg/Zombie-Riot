@@ -70,7 +70,7 @@ def potion_menu_callback(_menu, _index, _option):
 				elif weapon == secondary:
 					weapon.clip = max_clip
 					weapon.ammo = max_ammo
-				message.Potion.send(_index, type="full bullets", cost=14000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
 			else:
 				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
@@ -111,7 +111,6 @@ def potion_menu_callback(_menu, _index, _option):
 				message.Potion.send(_index, type="respawn", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
 				message.Dead.send(_index, green=zr.green,light_green=zr.light_green)
-
 
 @Event('round_end')
 def round_end(args):
