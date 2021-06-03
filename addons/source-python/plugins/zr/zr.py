@@ -19,6 +19,7 @@ from listeners.tick import Delay
 # Say/Server Commands
 from commands.say import SayFilter
 from commands.server import ServerCommand
+from commands.client import ClientCommandFilter
 # Config
 from configobj import ConfigObj
 # Weapon
@@ -72,8 +73,17 @@ class ZombiePlayer(Player):
 	def __init__(self, index):
 		super().__init__(index)
 		self.consecutive_bullets 	= False
-		self.joined_team 		= False
+		self.joined_team 		    = False
 		self.welcome_message 		= False
+		self.weapon_rifle 		    = False
+		self.weapon_secondary 		= False
+		self.player_target          = False
+
+def secondaries():
+	return ['usp','glock','deagle','p228','elite','fiveseven']
+
+def rifles():
+	return ['m4a1','ak47','awp','scout','sg552','galil','famas','aug','ump45','mp5navy','m3','xm1014','tmp','mac10','p90','g3sg1','sg550','m249']
 
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
@@ -98,6 +108,20 @@ def getUseridList():
 	
 def centertell(userid, text):
 	TextMsg(message=text, destination=4).send(index_from_userid(userid))
+
+@ClientCommandFilter
+def command_filter(command, index):
+	try:
+		if command[0].lower() == 'buy':
+			weapon = command[1].lower()
+			userid =  userid_from_index(index)
+			player = ZombiePlayer.from_userid(userid)
+			if weapon in secondaries():
+				player.weapon_secondary = weapon
+			elif weapon in rifles():
+				player.weapon_rifle = weapon
+	except ValueError:
+		pass    
 
 @PreEvent('server_cvar', 'player_team', 'player_disconnect', 'player_connect_client')
 def pre_events(game_event):
@@ -125,7 +149,6 @@ def zombie_version(command):
 
 def load():
 	global _loaded
-	global _infity
 	global _value
 	global _humans
 	global _health
@@ -149,6 +172,7 @@ def load():
 			queue_command_string('bot_chatter off')
 			queue_command_string('mp_humanteam ct')
 			queue_command_string('sv_hudhint_sound 0')
+			queue_command_string('mp_timelimit 300')
 			set_download()
 			echo_console('[Zombie Riot] Clan Tag: %s' % (clan))
 			init_loop()
@@ -328,6 +352,8 @@ def player_death(args):
 						if not _value == alive_zombies(): # Works better than if _value > 19
 							Delay(0.1, respawn, (userid,))
 				if _value == 0: 
+					for player in PlayerIter('bot'):
+						player.client_command('kill', True) # Makes sure bots doesn't stay alive after limit
 					for player in PlayerIter('all'):
 						player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
 						player.delay(3, cancel_overplay, (player.index,))
@@ -406,10 +432,18 @@ def build_hudmessage(userid):
 	global _value
 	global _day
 	_health = get_health(_day)
+	player = ZombiePlayer.from_userid(userid)
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
 	__msg__ += '\nZombies: %s' % (_value)
 	__msg__ += '\nZombies Health: %s' % (_health)
 	__msg__ += '\nHumans: %s' % (_humans)
+	if not player.player_target == False:
+		target = Player.from_userid(player.player_target)
+		if not target.dead and target.health > 0:
+			__msg__ += '\n%s: %s' % (target.name, target.health)
+		if target.dead or target.health < 0:
+			player.player_target = False
+
 	return __msg__
 
 @Event('player_hurt')
@@ -423,7 +457,19 @@ def player_hurt(args):
 			killer = Player.from_userid(attacker)
 			if attacker > 0:
 				if not victim.team == killer.team:
-					burn(userid, 10)   
+					burn(userid, 10)
+@Event('player_hurt')
+def player_hurt(args):
+	global _loaded
+	if _loaded > 0:
+		userid = args.get_int('userid')
+		victim = Player.from_userid(args['userid'])
+		killer = Player.from_userid(args['attacker'])
+		if args.get_int('attacker') > 0:
+			if not victim.team == killer.team:
+				if not killer.is_bot():
+					player = ZombiePlayer.from_userid(args['attacker'])
+					player.player_target = userid
 
 #==================================
 # Menu Call Backs
