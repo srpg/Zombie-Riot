@@ -40,14 +40,9 @@ def player_hurt(args):
 	if attacker > 0:
 		if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:    
 			play = Player(index_from_userid(attacker))
-			if not play.is_bot() and play.clan_tag in zr.server_clan:
-				chance = 10
-				if random.randint(1, 100) <= chance:
-					weapon = play.active_weapon
-					primary = play.primary
-					secondary = play.secondary
-					max_clip = weapon_manager[weapon.classname].clip
-					if weapon == primary:
-						weapon.clip = max_clip
-					elif weapon == secondary:
-						weapon.clip = max_clip  
+			if play.get_active_weapon() in zr.secondaries() + zr.rifles():
+				if not play.is_bot() and play.clan_tag in zr.server_clan:
+					chance = 10
+					if random.randint(1, 100) <= chance:
+						weapon = play.get_active_weapon()
+						weapon.clip = weapon_manager[weapon.classname].clip
