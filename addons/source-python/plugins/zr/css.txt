@@ -15,6 +15,22 @@ materials/models/player/ics/hellknight_red/hellknight.vmt
 materials/models/player/ics/hellknight_red/hellknight.vtf
 materials/models/player/ics/hellknight_red/hellknight_normal.vtf
 
+//Hunter
+materials/models/player/slow/hunter/slow_body.vmt
+materials/models/player/slow/hunter/slow_body.vtf
+materials/models/player/slow/hunter/slow_body_bump.vtf
+materials/models/player/slow/hunter/slow_head.vmt
+materials/models/player/slow/hunter/slow_head.vtf
+materials/models/player/slow/hunter/slow_head_bump.vtf
+materials/models/player/slow/hunter/slow_panzerplatten.vmt
+materials/models/player/slow/hunter/slow_panzerplatten.vtf
+models/player/slow/hunter/slow_hunter.dx80.vtx
+models/player/slow/hunter/slow_hunter.dx90.vtx
+models/player/slow/hunter/slow_hunter.mdl
+models/player/slow/hunter/slow_hunter.phy
+models/player/slow/hunter/slow_hunter.sw.vtx
+models/player/slow/hunter/slow_hunter.vvd
+
 //Berserker
 materials/models/player/slow/berserkerin/slow_body.vmt
 materials/models/player/slow/berserkerin/slow_body.vtf
@@ -55,6 +71,13 @@ models/player/zh/zh_corpse002.mdl
 models/player/zh/zh_corpse002.phy
 models/player/zh/zh_corpse002.sw.vtx
 models/player/zh/zh_corpse002.vvd
+
+models/player/zh/zh_zombie003.dx80.vtx
+models/player/zh/zh_zombie003.dx90.vtx
+models/player/zh/zh_zombie003.mdl
+models/player/zh/zh_zombie003.phy
+models/player/zh/zh_zombie003.sw.vtx
+models/player/zh/zh_zombie003.vvd
 
 models/player/slow/hunter/slow_hunter.mdl
 models/player/slow/berserkerin/slow.mdl

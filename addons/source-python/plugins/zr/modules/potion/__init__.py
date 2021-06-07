@@ -2,7 +2,6 @@ from events import Event
 from players.entity import Player
 from players.helpers import index_from_userid, userid_from_index
 from menus import SimpleMenu, SimpleOption, Text
-from messages import SayText2
 from weapons.manager import weapon_manager
 from zr.modules import message
 from zr import zr
@@ -58,21 +57,14 @@ def potion_menu_callback(_menu, _index, _option):
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_bullets':
 			if zr.isAlive(userid):
-				player.cash -= 14000
-				weapon = player.active_weapon
-				primary = player.primary
-				secondary = player.secondary
-				max_clip = weapon_manager[weapon.classname].clip
-				max_ammo = weapon_manager[weapon.classname].maxammo
-				if weapon == primary:
-					weapon.clip = max_clip
-					weapon.ammo = max_ammo
-				elif weapon == secondary:
-					weapon.clip = max_clip
-					weapon.ammo = max_ammo
-				message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
-			else:
-				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.get_active_weapon() in zr.secondaries() + zr.rifles():
+					player.cash -= 14000
+					weapon = player.get_active_weapon()
+					weapon.clip = weapon_manager[weapon.classname].clip
+					weapon.ammo = weapon_manager[weapon.classname].maxammo
+					message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
+				else:
+					message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
 			if zr.isAlive(userid):
 				bonus = player.speed / 4
@@ -98,12 +90,14 @@ def potion_menu_callback(_menu, _index, _option):
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
-				player.cash -= 16000
-				user = zr.ZombiePlayer.from_userid(userid)
-				user.consecutive_bullets = True
-				message.Potion.send(_index, type="infinity bullets", cost=16000, red=zr.red,green=zr.green,light_green=zr.light_green)
-			else:
-				message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.get_active_weapon() in zr.secondaries() + zr.rifles():
+					player.get_active_weapon().clip = weapon_manager[player.get_active_weapon().classname].clip
+					player.cash -= 16000
+					user = zr.ZombiePlayer.from_userid(userid)
+					user.infinity_bullets = True
+					message.Potion.send(_index, type="infinity bullets", cost=16000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'respawn':
 			if not zr.isAlive(userid) and zr._humans > 0:
 				player.delay(0.1, zr.respawn, (userid,))
@@ -116,24 +110,18 @@ def potion_menu_callback(_menu, _index, _option):
 def round_end(args):
 	for i in zr.getUseridList():
 		user = zr.ZombiePlayer.from_userid(i)
-		user.consecutive_bullets = False
+		user.infinity_bullets = False
 
 @Event('player_death')
 def player_death(args):
 	victim = zr.ZombiePlayer.from_userid(args['userid'])
-	victim.consecutive_bullets = False
+	victim.infinity_bullets = False
 
 @Event('weapon_fire')
 def weapon_fire(args):
 	userid = args.get_int('userid')
 	user = zr.ZombiePlayer.from_userid(userid)
-	if user.consecutive_bullets:
+	if user.infinity_bullets:
 		player = Player(index_from_userid(userid))
-		primary = player.primary
-		secondary = player.secondary
-		weapon = player.active_weapon
-		max_clip = weapon_manager[weapon.classname].clip
-		if weapon == primary:
-			weapon.clip = max_clip
-		elif weapon == secondary:
-			weapon.clip = max_clip
+		weapon = player.get_active_weapon()
+		weapon.clip += 1
