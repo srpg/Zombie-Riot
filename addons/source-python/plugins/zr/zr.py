@@ -1,41 +1,28 @@
- # Imports
 import os, path, random
-# Core
 from core import GAME_NAME, echo_console
-# Entity
 from entities.entity import Entity
-# Events
+from entities.hooks import EntityPreHook, EntityCondition
+from entities.helpers import index_from_pointer
 from events import Event
 from events.hooks import PreEvent, EventAction
-# Player class / userid / Player Iter
 from players.helpers import index_from_userid, userid_from_index
 from players.entity import Player
 from filters.players import PlayerIter
-# Engine
 from engines.precache import Model
 from engines.server import queue_command_string
-# Delay
 from listeners.tick import Delay
-# Say/Server Commands
 from commands.say import SayFilter
 from commands.server import ServerCommand
 from commands.client import ClientCommandFilter
-# Config
 from configobj import ConfigObj
-# Weapon
 from filters.weapons import WeaponClassIter, WeaponIter
-# Messages
+from weapons.manager import weapon_manager
 from messages import TextMsg, HintText
-# Download
 from stringtables.downloads import Downloadables
-# Color
 from colors import Color
 from colors import GREEN, LIGHT_GREEN, RED
-# Menus
 from menus import Text, SimpleMenu, PagedMenu, SimpleOption
-# Listeners
 from listeners import OnLevelShutdown
-# Own Modules
 from zr.modules import admin
 from zr.modules import market 
 from zr.modules import potion
@@ -72,7 +59,7 @@ class ZombiePlayer(Player):
 
 	def __init__(self, index):
 		super().__init__(index)
-		self.consecutive_bullets 	= False
+		self.infinity_bullets 	    = False
 		self.joined_team 		    = False
 		self.welcome_message 		= False
 		self.weapon_rifle 		    = False
@@ -109,20 +96,20 @@ def getUseridList():
 def centertell(userid, text):
 	TextMsg(message=text, destination=4).send(index_from_userid(userid))
 
-@ClientCommandFilter
-def command_filter(command, index):
+@EntityPreHook(EntityCondition.is_player, 'buy_internal')
+def pre_buy(args):
 	try:
-		if command[0].lower() == 'buy':
-			weapon = command[1].lower()
-			userid =  userid_from_index(index)
-			player = ZombiePlayer.from_userid(userid)
-			if weapon in secondaries():
-				player.weapon_secondary = weapon
-			elif weapon in rifles():
-				player.weapon_rifle = weapon
-	except ValueError:
-		pass    
-
+		player = Player(index_from_pointer(args[0]))
+		userid = player.userid
+		zr_player = ZombiePlayer.from_userid(userid)
+		weapon = args[1]
+		if weapon in secondaries():
+			zr_player.weapon_secondary = weapon
+		elif weapon in rifles():
+			zr_player.weapon_rifle = weapon
+	except KeyError:
+		return
+    
 @PreEvent('server_cvar', 'player_team', 'player_disconnect', 'player_connect_client')
 def pre_events(game_event):
 	global _loaded
@@ -290,8 +277,11 @@ def player_activate(args):
 	global _loaded
 	if _loaded > 0:
 		player = ZombiePlayer.from_userid(args['userid'])
-		player.joined_team = False
-		player.welcome_message = False
+		player.joined_team              = False
+		player.welcome_message          = False
+		player.player_target            = False
+		player.weapon_rifle 		    = False
+		player.weapon_secondary 		= False
 
 @Event('player_team')
 def player_team(args):
@@ -353,7 +343,7 @@ def player_death(args):
 							Delay(0.1, respawn, (userid,))
 				if _value == 0: 
 					for player in PlayerIter('bot'):
-						player.client_command('kill', True) # Makes sure bots doesn't stay alive after limit
+						player.client_command('kill', True) # Makes sure bots doesn't stay alive
 					for player in PlayerIter('all'):
 						player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
 						player.delay(3, cancel_overplay, (player.index,))
@@ -365,17 +355,6 @@ def player_death(args):
 def cancel_overplay(index):
 	player = Player(index)
 	player.client_command('r_screenoverlay 0')
-
-@Event('weapon_fire_on_empty')
-def weapon_fire_on_empty(args):
-	global _loaded
-	if _loaded > 0:
-		userid = args.get_int('userid')
-		player = Player.from_userid(userid)
-		if player.primary:
-			player.primary.remove()
-		elif player.secondary:
-			player.secondary.remove()
 
 def won():
 	global _day
@@ -416,7 +395,7 @@ def timer(userid, duration, count):
 
 def init_loop():
 	global hint
-	hint = Delay(1.0, info)
+	hint = Delay(0, info)
 
 def stop_loop():
 	global hint
@@ -441,7 +420,7 @@ def build_hudmessage(userid):
 		target = Player.from_userid(player.player_target)
 		if not target.dead and target.health > 0:
 			__msg__ += '\n%s: %s' % (target.name, target.health)
-		if target.dead or target.health < 0:
+		else:
 			player.player_target = False
 
 	return __msg__
@@ -451,13 +430,11 @@ def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
 		if args.get_string('weapon') == 'hegrenade' and fire:
-			userid = args.get_int('userid')
-			attacker = args.get_int('attacker')
-			victim = Player.from_userid(userid)
-			killer = Player.from_userid(attacker)
-			if attacker > 0:
+			victim = Player.from_userid(args['userid'])
+			killer = Player.from_userid(args['attacker'])
+			if args.get_int('attacker') > 0:
 				if not victim.team == killer.team:
-					burn(userid, 10)
+					burn(args.get_int('userid'), 10)
 @Event('player_hurt')
 def player_hurt(args):
 	global _loaded
