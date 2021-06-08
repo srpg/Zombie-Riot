@@ -63,6 +63,8 @@ def potion_menu_callback(_menu, _index, _option):
 					weapon.clip = weapon_manager[weapon.classname].clip
 					weapon.ammo = weapon_manager[weapon.classname].maxammo
 					message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
+				else:
+					message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
 				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
@@ -97,7 +99,9 @@ def potion_menu_callback(_menu, _index, _option):
 					user.infinity_bullets = True
 					message.Potion.send(_index, type="infinity bullets", cost=16000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
+					message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
+			else:
+				message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'respawn':
 			if not zr.isAlive(userid) and zr._humans > 0:
 				player.delay(0.1, zr.respawn, (userid,))
