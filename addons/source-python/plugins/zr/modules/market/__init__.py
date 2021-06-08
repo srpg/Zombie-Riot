@@ -48,7 +48,7 @@ def main_menu_callback(_menu, _index, _option):
 		if choice == 'rebuy':
 			if zr.isAlive(userid):
 				weapon = player.get_active_weapon()
-				if player.cash >= 1000:
+				if player.cash >= 1000 and not weapon.classname.replace('weapon_', '', 1) in ['knife', 'hegrenade', 'flashbang', 'smokegrenade']:
 					player.cash -= 1000
 					weapon.clip = weapon_manager[weapon.classname].clip
 					weapon.ammo = weapon_manager[weapon.classname].maxammo
