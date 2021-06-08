@@ -40,7 +40,7 @@ def player_hurt(args):
 	if attacker > 0:
 		if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:    
 			play = Player(index_from_userid(attacker))
-			if play.get_active_weapon() in zr.secondaries() + zr.rifles():
+			if play.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
 				if not play.is_bot() and play.clan_tag in zr.server_clan:
 					chance = 10
 					if random.randint(1, 100) <= chance:
