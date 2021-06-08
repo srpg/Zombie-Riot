@@ -77,6 +77,7 @@ def rebuy(userid):
 					player.secondary.remove()
 				player.give_named_item('weapon_%s' % zr_player.weapon_secondary)
 				player.cash -= weapon_manager[zr_player.weapon_secondary].cost
+				message.Weapon.send(_index, weapon=zr_player.weapon_secondary, cost=weapon_manager[zr_player.weapon_secondary].cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
 				message.Money.send(player.index, red=zr.red,green=zr.green,light_green=zr.light_green)
 		if zr_player.weapon_rifle:
@@ -85,6 +86,7 @@ def rebuy(userid):
 					player.primary.remove()
 				player.give_named_item('weapon_%s' % zr_player.weapon_rifle)
 				player.cash -= weapon_manager[zr_player.weapon_rifle].cost
+				message.Weapon.send(_index, weapon=zr_player.weapon_rifle, cost=weapon_manager[zr_player.weapon_rifle].cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
 				message.Money.send(player.index, red=zr.red,green=zr.green,light_green=zr.light_green)
 	else:    
