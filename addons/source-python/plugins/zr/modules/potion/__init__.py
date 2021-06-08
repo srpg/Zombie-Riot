@@ -63,8 +63,8 @@ def potion_menu_callback(_menu, _index, _option):
 					weapon.clip = weapon_manager[weapon.classname].clip
 					weapon.ammo = weapon_manager[weapon.classname].maxammo
 					message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
-				else:
-					message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
+			else:
+				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
 			if zr.isAlive(userid):
 				bonus = player.speed / 4
