@@ -57,7 +57,7 @@ def potion_menu_callback(_menu, _index, _option):
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_bullets':
 			if zr.isAlive(userid):
-				if player.get_active_weapon() in zr.secondaries() + zr.rifles():
+				if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
 					player.cash -= 14000
 					weapon = player.get_active_weapon()
 					weapon.clip = weapon_manager[weapon.classname].clip
@@ -90,7 +90,7 @@ def potion_menu_callback(_menu, _index, _option):
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
-				if player.get_active_weapon() in zr.secondaries() + zr.rifles():
+				if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
 					player.get_active_weapon().clip = weapon_manager[player.get_active_weapon().classname].clip
 					player.cash -= 16000
 					user = zr.ZombiePlayer.from_userid(userid)
