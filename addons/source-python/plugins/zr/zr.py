@@ -403,9 +403,11 @@ def stop_loop():
     
 def info():
 	init_loop()
-	for i in getUseridList() and not Player.from_userid(i).is_bot():
+	for i in getUseridList():
 		if info_panel:
-			hudhint(i, build_hudmessage(i))
+			if not Player.from_userid(i).is_bot():
+				hudhint(i, build_hudmessage(i))
+
 
 def build_hudmessage(userid):
 	global _value
