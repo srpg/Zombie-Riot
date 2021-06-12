@@ -128,4 +128,5 @@ def weapon_fire(args):
 	if user.infinity_bullets:
 		player = Player(index_from_userid(userid))
 		weapon = player.get_active_weapon()
-		weapon.clip += 1
+		if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
+			weapon.clip += 1
