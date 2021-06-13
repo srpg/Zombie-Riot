@@ -196,11 +196,13 @@ def get_days(value):
 
 def get_health(value):
 	val = '%s' % (value)
-	return  int(_CONFIG[val]['health'])
+	if not value >= max_day():
+		return  int(_CONFIG[val]['health'])
     
 def get_model(value):
 	val = '%s' % (value)
-	return  _CONFIG[val]['Model']
+	if not value >= max_day():
+		return  _CONFIG[val]['Model']
     
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
