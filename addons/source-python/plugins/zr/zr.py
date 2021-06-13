@@ -196,12 +196,12 @@ def get_days(value):
 
 def get_health(value):
 	val = '%s' % (value)
-	if not value >= max_day():
+	if not val >= max_day():
 		return  int(_CONFIG[val]['health'])
     
 def get_model(value):
 	val = '%s' % (value)
-	if not value >= max_day():
+	if not val >= max_day():
 		return  _CONFIG[val]['Model']
     
 def set_download():
