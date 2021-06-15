@@ -314,45 +314,34 @@ def player_disconnect(args):
 def player_death(args):
 	global _loaded
 	if _loaded > 0:
-		global _humans
-		global _value
-		global _day
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
-		victim = Player.from_userid(userid)
-		killer = Player.from_userid(attacker)# Use instead args['attacker']?
 		if attacker > 0:
-			if victim.is_bot():
-				if userid == attacker: # Did zombie kill himself, Should fix fire kills not removing values
-					_value -= 1
-					if not _value == alive_zombies():
-						Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
-			if not victim.is_bot():
-				if userid == attacker: # Did player suicide
-					_humans -= 1
-					if _humans > 0:
-						victim.delay(0.1, timer, (userid, 30, 1))
-			if not victim.team == killer.team:
-				if victim.team == 3: 
-					_humans -= 1
-					if _humans > 0:
-						victim.delay(0.1, timer, (userid, 30, 1))
-				if _humans > 0:
-					Delay(0.1, won)
-					if victim.team == 2:
-						_value -= 1
-						if not _value == alive_zombies(): # Works better than if _value > 19
-							Delay(0.1, respawn, (userid,))
-				if _value == 0: 
-					for player in PlayerIter('bot'):
-						player.client_command('kill', True) # Makes sure bots doesn't stay alive
-					for player in PlayerIter('all'):
-						player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
-						player.delay(3, cancel_overplay, (player.index,))
-				if _humans == 0:
-					for player in PlayerIter('all'):
-						player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
-						player.delay(3, cancel_overplay, (player.index,))
+			count_zombies(userid, attacker)
+            
+def count_zombies(userid, attacker):
+	global _humans
+	global _value
+	global _day
+	victim = Player.from_userid(userid)
+	killer = Player.from_userid(attacker)
+	if not victim.team == killer.team:
+		if victim.is_bot(userid):
+			_value -= 1
+			if not _value == alive_zombies():
+				Delay(0.1, respawn, (userid,))
+			if _value == 0: 
+				for player in PlayerIter('all'):
+					player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
+					player.delay(3, cancel_overplay, (player.index,))
+		else:
+			_humans -= 1
+			if _humans > 0:
+				victim.delay(0.1, timer, (userid, 30, 1))
+			if _humans == 0:
+				for player in PlayerIter('all'):
+				player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
+					player.delay(3, cancel_overplay, (player.index,))
 
 def cancel_overplay(index):
 	player = Player(index)
