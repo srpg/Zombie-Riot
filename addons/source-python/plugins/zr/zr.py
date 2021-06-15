@@ -325,6 +325,16 @@ def count_zombies(userid, attacker):
 	global _day
 	victim = Player.from_userid(userid)
 	killer = Player.from_userid(attacker)
+	if victim.is_bot():
+		if userid == attacker: # Did zombie kill himself, Should fix fire kills not removing values
+			_value -= 1
+			if not _value == alive_zombies():
+				Delay(0.1, respawn, (userid,)) # Respawn suicided bot due to fire
+	if not victim.is_bot():
+		if userid == attacker: # Did player suicide
+			_humans -= 1
+			if _humans > 0:
+				victim.delay(0.1, timer, (userid, 30, 1))
 	if not victim.team == killer.team:
 		if victim.is_bot(userid):
 			_value -= 1
