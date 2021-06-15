@@ -196,12 +196,12 @@ def get_days(value):
 
 def get_health(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return  int(_CONFIG[val]['health'])
     
 def get_model(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return  _CONFIG[val]['Model']
     
 def set_download():
@@ -363,7 +363,7 @@ def won():
 	global _value
 	if _value == 0:
 		_day += 1
-		if _day > max_day():
+		if _day == max_day():
 			Delay(1, winner)
             
 def winner():
@@ -409,7 +409,7 @@ def info():
 	for i in getUseridList():
 		if info_panel:
 			if not Player.from_userid(i).is_bot():
-				if not _day >= max_day():
+				if not _day > max_day():
 					hudhint(i, build_hudmessage(i))
 
 
