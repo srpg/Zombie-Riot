@@ -340,7 +340,7 @@ def count_zombies(userid, attacker):
 				victim.delay(0.1, timer, (userid, 30, 1))
 			if _humans == 0:
 				for player in PlayerIter('all'):
-				player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
+					player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
 					player.delay(3, cancel_overplay, (player.index,))
 
 def cancel_overplay(index):
