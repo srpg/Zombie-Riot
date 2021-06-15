@@ -343,6 +343,7 @@ def player_death(args):
 						if not _value == alive_zombies(): # Works better than if _value > 19
 							Delay(0.1, respawn, (userid,))
 				if _value == 0: 
+					Delay(0.1, won)
 					for player in PlayerIter('bot'):
 						player.client_command('kill', True) # Makes sure bots doesn't stay alive
 					for player in PlayerIter('all'):
