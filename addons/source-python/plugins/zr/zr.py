@@ -310,6 +310,7 @@ def player_disconnect(args):
 			global _humans
 			_humans -= 1
 
+@Event('player_death')
 def player_death(args):
 	global _loaded
 	if _loaded > 0:
