@@ -337,7 +337,6 @@ def player_death(args):
 					if _humans > 0:
 						victim.delay(0.1, timer, (userid, 30, 1))
 				if _humans > 0:
-					Delay(0.1, won)
 					if victim.team == 2:
 						_value -= 1
 						if not _value == alive_zombies(): # Works better than if _value > 19
