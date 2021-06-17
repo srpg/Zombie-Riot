@@ -352,9 +352,9 @@ def won():
 	global _day
 	global _value
 	if _value == 0:
-		_day += 1
 		if _day == max_day():
-			Delay(1, winner)
+			Delay(0.1, winner)
+		_day += 1
             
 def winner():
 	global _day
