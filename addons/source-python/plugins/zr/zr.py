@@ -319,9 +319,9 @@ def player_death(args):
 		global _day
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
-		victim = Player.from_userid(args['userid'])
-		killer = Player.from_userid(args['attacker'])
 		if attacker > 0:
+			victim = Player.from_userid(args['userid'])
+			killer = Player.from_userid(args['attacker'])
 			if not victim.team == killer.team:
 				if victim.team == 3: 
 					_humans -= 1
@@ -426,9 +426,9 @@ def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
 		if args.get_string('weapon') == 'hegrenade' and fire:
-			victim = Player.from_userid(args['userid'])
-			killer = Player.from_userid(args['attacker'])
 			if args.get_int('attacker') > 0:
+				victim = Player.from_userid(args['userid'])
+				killer = Player.from_userid(args['attacker'])
 				if not victim.team == killer.team:
 					burn(args.get_int('userid'), 10)
 @Event('player_hurt')
@@ -436,9 +436,9 @@ def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
 		userid = args.get_int('userid')
-		victim = Player.from_userid(args['userid'])
-		killer = Player.from_userid(args['attacker'])
 		if args.get_int('attacker') > 0:
+			victim = Player.from_userid(args['userid'])
+			killer = Player.from_userid(args['attacker'])
 			if not victim.team == killer.team:
 				if not killer.is_bot():
 					player = ZombiePlayer.from_userid(args['attacker'])
