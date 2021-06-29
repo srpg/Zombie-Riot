@@ -7,7 +7,7 @@ from zipfile import ZipFile
 from core import echo_console
 from commands.server import ServerCommand
 
-Ver = '1.5.0'
+Ver = '1.5.1'
 new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
