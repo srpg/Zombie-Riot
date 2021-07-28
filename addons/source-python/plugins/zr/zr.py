@@ -42,7 +42,7 @@ weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
 fire = 1 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
 info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disabled
-
+auto_updater = 1 # 1 = Enable automatic updating when server start and new version available
 #===================
 # Def/Global functions
 #===================
@@ -175,14 +175,6 @@ def unload():
 	global _loaded
 	stop_loop()
 	_loaded = 0
-	echo_console('***********************************************************')
-	echo_console('[Zombie Riot] Unloaded Completely')
-	if _loaded == 0:
-		msg = 'Not Loaded'
-	else: 
-		msg = 'Loaded'
-	echo_console('[Zombie Riot] Plugin is %s' % (msg))
-	echo_console('***********************************************************')
                 
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).get_property_bool('pl.deadflag')

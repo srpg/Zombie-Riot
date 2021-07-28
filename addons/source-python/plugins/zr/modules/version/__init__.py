@@ -7,7 +7,7 @@ from zipfile import ZipFile
 from core import echo_console
 from commands.server import ServerCommand
 
-Ver = '1.5.2'
+Ver = '1.5.3'
 new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
@@ -21,7 +21,11 @@ def version_checker(timeout=3):
         
 def check_version():
 	if version_checker() > Ver:
-		echo_console('[Zombie Riot] There is new version available to download!\n[Zombie Riot] Type in console zr_update to download new version')
+		if zr.auto_updater:
+			print('[Zombie Riot] Started updating plugin automatically!')
+			queue_command_string('zr_update')
+		else:
+			echo_console('[Zombie Riot] There is new version available to download!\n[Zombie Riot] Type in console zr_update to download new version')
 	else:
 		echo_console('[Zombie Riot] There is no new version available!')
 
@@ -47,6 +51,10 @@ def download(timeout=3):
 def zr_update(command):
 	if version_checker() > Ver:
 		download()
-		echo_console('[Zombie Riot] Newest version of plugin have downloaded!. Please restart the server for apply changes')
+		if zr.auto_updater:
+			queue_command_string('sp plugin reload zr')
+			print('[Zombie Riot] New version have installed and applyed the changes!')
+		else:
+			echo_console('[Zombie Riot] Newest version of plugin have downloaded!. Please restart the server for apply changes')
 	else:
 		echo_console('[Zombie Riot] There is no new version available to download')
