@@ -6,6 +6,7 @@ from urllib.request import urlopen
 from zipfile import ZipFile
 from core import echo_console
 from commands.server import ServerCommand
+from engines.server import queue_command_string
 
 Ver = '1.5.3'
 new_version = ('https://cssbestrpg.online/version.txt')
