@@ -26,7 +26,11 @@ def check_version():
 		echo_console('[Zombie Riot] There is no new version available!')
 
 def download(timeout=3):
+	print('[Zombie Riot] Updating progress: 33%')
+	print('[Zombie Riot] Started downloading the files!')
 	with urlopen('https://github.com/srpg/Zombie-Riot/archive/main.zip') as response:
+		print('[Zombie Riot] Updating progress: 66%')
+		print('[Zombie Riot] Downloaded the files!')
 		with ZipFile(BytesIO(response.read())) as zipfile:
 			for info in zipfile.infolist():
 				if info.is_dir():
@@ -36,6 +40,8 @@ def download(timeout=3):
 				path.dirname().makedirs_p()
 				with open(path, 'wb') as f:
 					f.write(zipfile.read(filename))
+		print('[Zombie Riot] Updating progress: Finished')
+		print('[Zombie Riot] Extracted the files!')
 
 @ServerCommand('zr_update')
 def zr_update(command):
