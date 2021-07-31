@@ -8,7 +8,7 @@ from core import echo_console
 from commands.server import ServerCommand
 from engines.server import queue_command_string
 
-Ver = '1.5.3'
+Ver = '1.5.4'
 new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
