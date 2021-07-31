@@ -283,15 +283,14 @@ def player_team(args):
 	if _loaded > 0:
 		global _humans
 		userid = args.get_int('userid')
-		if _humans > 0:
-			if not isAlive(userid):
-				if args.get_int('team') == 3: # Is ct
-					player = ZombiePlayer.from_userid(userid)
-					if not player.joined_team:
-						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 10, 1))
-						player.joined_team = True
-					else:
-						Player(index_from_userid(userid)).delay(0.1, timer, (userid, 30, 1))
+		if _humans > 0 and not isAlive(userid):
+			if args.get_int('team') == 3: # Is ct
+				player = ZombiePlayer.from_userid(userid)
+				if not player.joined_team:
+					player.delay(0.1, timer, (userid, 10, 1))
+					player.joined_team = True
+				else:
+					player.delay(0.1, timer, (userid, 30, 1))
 
 @Event('player_disconnect')
 def player_disconnect(args):
@@ -402,7 +401,6 @@ def build_hudmessage(userid):
 	player = ZombiePlayer.from_userid(userid)
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
 	__msg__ += '\nZombies: %s' % (_value)
-	__msg__ += '\nZombies Health: %s' % (_health)
 	__msg__ += '\nHumans: %s' % (_humans)
 	if not player.player_target == False:
 		target = Player.from_userid(player.player_target)
