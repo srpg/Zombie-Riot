@@ -1,14 +1,13 @@
 import random
 from events import Event
 from players.entity import Player
-from players.helpers import index_from_userid
 from weapons.manager import weapon_manager
 from zr import zr
 
 @Event('player_spawn')
 def player_spawn(args):
 	userid = args.get_int('userid')
-	player = Player(index_from_userid(userid))
+	player = Player.from_userid(userid)
 	if player.clan_tag in zr.server_clan:
 		player.max_health += 25
 		player.health = player.max_health
@@ -22,7 +21,7 @@ def player_death(args):
 	userid = args.get_int('userid')
 	attacker = args.get_int('attacker')
 	if attacker > 0:
-		play = Player(index_from_userid(attacker))
+		play = Player.from_userid(attacker)
 		if not play.is_bot() and play.clan_tag in zr.server_clan:
 			if not play.max_health > 145:
 				play.max_health += 5
@@ -38,11 +37,11 @@ def player_hurt(args):
 	userid = args.get_int('userid')
 	attacker = args.get_int('attacker')
 	if attacker > 0:
-		if not Player(index_from_userid(userid)).team == Player(index_from_userid(attacker)).team:    
-			play = Player(index_from_userid(attacker))
-			if play.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
-				if not play.is_bot() and play.clan_tag in zr.server_clan:
-					chance = 10
-					if random.randint(1, 100) <= chance:
+		victim = Player.from_userid(userid)
+		hurter = Player.from_userid(attacker)
+		if not victim.team == hurter.team:    
+			if hurter.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
+				if not hurter.is_bot() and hurter.clan_tag in zr.server_clan and not hurter.dead:
+					if random.randint(1, 100) <= 10:
 						weapon = play.get_active_weapon()
 						weapon.clip = weapon_manager[weapon.classname].clip
