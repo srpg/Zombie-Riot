@@ -1,4 +1,5 @@
 import path
+from events import Event
 from configobj import ConfigObj
 from players.entity import Player
 from engines.server import engine_server
@@ -11,6 +12,18 @@ from menus import PagedMenu, PagedOption
 from messages import SayText2
 from zr import zr
 
+can_beacon = True
+
+@Event('round_start')
+def round_start(args):
+	global can_beacon
+	can_beacon = True
+
+@Event('round_end')
+def round_end(args):
+	global can_beacon
+	can_beacon = False
+    
 __FILEPATH__	= path.Path(__file__).dirname()
 admins = ConfigObj(__FILEPATH__ + '/_admins.ini')
 
@@ -103,7 +116,8 @@ def zombie_menu_callback(_menu, _index, _option):
 		player.delay(1, beacon, (choice,))
 
 def beacon(userid):
-	if zr.isAlive(userid):
+	global can_beacon
+	if zr.isAlive(userid) and can_beacon:
 		player = Player(index_from_userid(userid))
 		player.delay(1, beacon, (userid,))
 		player.emit_sound(sample='buttons/blip1.wav',volume=1.0,attenuation=0.5)
