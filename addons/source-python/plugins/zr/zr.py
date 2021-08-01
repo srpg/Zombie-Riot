@@ -396,8 +396,7 @@ def info():
 
 def build_hudmessage(userid):
 	global _value
-	global _day
-	_health = get_health(_day)
+	global _day 
 	player = ZombiePlayer.from_userid(userid)
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
 	__msg__ += '\nZombies: %s' % (_value)
