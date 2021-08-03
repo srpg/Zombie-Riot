@@ -99,14 +99,12 @@ def centertell(userid, text):
 @EntityPreHook(EntityCondition.is_player, 'buy_internal')
 def pre_buy(args):
 	try:
-		player = Player(index_from_pointer(args[0]))
-		userid = player.userid
-		zr_player = ZombiePlayer.from_userid(userid)
+		player = ZombiePlayer(index_from_pointer(args[0]))
 		weapon = args[1]
 		if weapon in secondaries():
-			zr_player.weapon_secondary = weapon
+			player.weapon_secondary = weapon
 		elif weapon in rifles():
-			zr_player.weapon_rifle = weapon
+			player.weapon_rifle = weapon
 	except KeyError:
 		return
     
@@ -139,7 +137,7 @@ def load():
 	global _value
 	global _humans
 	global _health
-	if GAME_NAME == 'cstrike':
+	if not GAME_NAME == 'csgo':
 		_loaded = 1
 		if  _loaded > 0:
 			_value = 0
@@ -169,7 +167,7 @@ def load():
 			queue_command_string('mp_restartgame 1')
 			echo_console('***********************************************************')
 	else:
-		raise NotImplementedError('[Zombie Riot] This plugin only supports Counter-Strike-Source!') 
+		raise NotImplementedError('[Zombie Riot] This plugin doesn\'t support csgo!') 
 
 def unload():
 	global _loaded
