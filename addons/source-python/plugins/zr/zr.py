@@ -159,7 +159,7 @@ def load():
 			queue_command_string('sv_hudhint_sound 0')
 			queue_command_string('mp_timelimit 300')
 			set_download()
-			echo_console('[Zombie Riot] Clan Tag: %s' % (clan))
+			echo_console(f'[Zombie Riot] Clan Tag: {clan}')
 			init_loop()
 			echo_console('[Zombie Riot] Author: F1N/srpg')
 			echo_console('[Zombie Riot] Version: Beta')
@@ -175,7 +175,7 @@ def unload():
 	_loaded = 0
                 
 def isAlive(userid):
-	return not Player(index_from_userid(userid)).get_property_bool('pl.deadflag')
+	return not Player(index_from_userid(userid)).dead
 
 def max_day():
 	return int(_CONFIG['Days']['value'])
