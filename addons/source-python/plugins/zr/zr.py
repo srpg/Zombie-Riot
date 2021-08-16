@@ -123,6 +123,8 @@ def pre_buy(args):
 				player.weapon_secondary = weapon
 			elif weapon in rifles():
 				player.weapon_rifle = weapon
+		else:
+			print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
 	except KeyError:
 		return
 
