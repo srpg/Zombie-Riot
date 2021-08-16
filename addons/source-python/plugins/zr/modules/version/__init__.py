@@ -34,8 +34,8 @@ def check_version():
 def download(timeout=3):
 	print('[Zombie Riot] Started downloading the files. Progress 20%')
 	with urlopen('https://github.com/srpg/Zombie-Riot/archive/main.zip') as response:
-		extract(response)
 		print('[Zombie Riot] Downloaded the files. Progress 40%')
+		extract(response)
 
 def extract(response):
 	print('[Zombie Riot] Started extracting the files. Progress 60%')
@@ -48,8 +48,8 @@ def extract(response):
 			path.dirname().makedirs_p()
 			with open(path, 'wb') as f:
 				f.write(zipfile.read(filename))
-		apply() 
 		print('[Zombie Riot] Extracted the files. Progress 80%')
+		apply() 
         
 def apply():
 	print('[Zombie Riot] Auto update finished. Progress 100%')
