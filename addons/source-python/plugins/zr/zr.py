@@ -260,12 +260,11 @@ def round_start(args):
 	global _loaded
 	if _loaded > 0:
 		queue_command_string('mp_roundtime 9')
-		queue_command_string('bot_knives_only 1')
 		global _day
-		global _value
 		global _humans
 		_health = get_health(_day)
 		_value = get_days(_day)
+		global _value
 		if server_name:
 			queue_command_string('hostname "Zombie Riot Day: [%s/%s]"' % (_day, max_day()))
 		_humans = real_count()
@@ -325,12 +324,18 @@ def player_death(args):
 		if attacker > 0:
 			victim = Player.from_userid(args['userid'])
 			killer = Player.from_userid(args['attacker'])
+			if victim.team == 3: # Is a ct
+				if userid == attacker: # Did ct just suicide
+					_humans -= 1
+			elif victim.team == 2: # Is a zombie
+				if userid == attacker: # Did zombie just suicide
+					_value -= 1
 			if not victim.team == killer.team:
 				if victim.team == 3: 
 					_humans -= 1
 					if _humans > 0:
 						victim.delay(0.1, timer, (userid, 30, 1))
-				if victim.team == 2:
+				elif victim.team == 2:
 					_value -= 1
 					if not _value == alive_zombies(): # Works better than if _value > 19
 						if _humans > 0:
