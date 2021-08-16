@@ -449,7 +449,7 @@ def player_hurt(args):
 					burn(args.get_int('userid'), 10)
 				if not killer.is_bot():
 					player = ZombiePlayer.from_userid(args['attacker'])
-					player.player_target = userid
+					player.player_target = args.get_int('userid')
 #==================================
 # Menu Call Backs
 #==================================
