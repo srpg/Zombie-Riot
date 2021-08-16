@@ -263,6 +263,7 @@ def round_start(args):
 		global _day
 		global _humans
 		_health = get_health(_day)
+		global _value
 		_value = get_days(_day)
 		if server_name:
 			queue_command_string('hostname "Zombie Riot Day: [%s/%s]"' % (_day, max_day()))
