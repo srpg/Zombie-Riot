@@ -103,7 +103,7 @@ def centertell(userid, text):
 @Event('item_pickup') # Is called when players pick up a weapon
 def item_pickup(args):
 	player = ZombiePlayer.from_userid(args['userid'])
-		if not player.is_bot()_
+	if not player.is_bot():
 		if GAME_NAME == 'cstrike':
 			weapon = args.get_string('item')
 			if weapon in secondaries():
