@@ -102,16 +102,16 @@ def centertell(userid, text):
 
 @Event('item_pickup') # Is called when players pick up a weapon
 def item_pickup(args):
-	if GAME_NAME == 'cstrike':
-		player = ZombiePlayer.from_userid(args['userid'])
-		weapon = args.get_string('item')
-		if weapon in secondaries():
-			player.weapon_secondary = weapon
-		elif weapon in rifles():
-			player.weapon_rifle = weapon
-			
-	else:
-		print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
+	player = ZombiePlayer.from_userid(args['userid'])
+		if not player.is_bot()_
+		if GAME_NAME == 'cstrike':
+			weapon = args.get_string('item')
+			if weapon in secondaries():
+				player.weapon_secondary = weapon
+			elif weapon in rifles():
+				player.weapon_rifle = weapon
+		else:
+			print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
 
 @PreEvent('server_cvar', 'player_team', 'player_disconnect', 'player_connect_client')
 def pre_events(game_event):
