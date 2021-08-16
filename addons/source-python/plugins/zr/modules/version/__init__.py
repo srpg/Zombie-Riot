@@ -9,7 +9,7 @@ from commands.server import ServerCommand
 from engines.server import queue_command_string
 from zr import zr
 
-Ver = '1.5.9'
+Ver = '1.6.0'
 new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
@@ -32,31 +32,35 @@ def check_version():
 		echo_console('[Zombie Riot] There is no new version available!')
 
 def download(timeout=3):
-	print('[Zombie Riot] Updating progress: 33%')
-	print('[Zombie Riot] Started downloading the files!')
+	print('[Zombie Riot] Started downloading the files. Progress 20%')
 	with urlopen('https://github.com/srpg/Zombie-Riot/archive/main.zip') as response:
-		print('[Zombie Riot] Updating progress: 66%')
-		print('[Zombie Riot] Downloaded the files!')
-		with ZipFile(BytesIO(response.read())) as zipfile:
-			for info in zipfile.infolist():
-				if info.is_dir():
-					continue
-				filename = info.filename
-				path = GAME_PATH / Path(filename.split('/', 1)[1])
-				path.dirname().makedirs_p()
-				with open(path, 'wb') as f:
-					f.write(zipfile.read(filename))
-		print('[Zombie Riot] Updating progress: Finished')
-		print('[Zombie Riot] Extracted the files!')
+		extract(response)
+		print('[Zombie Riot] Downloaded the files. Progress 40%')
+
+def extract(response):
+	print('[Zombie Riot] Started extracting the files. Progress 60%')
+	with ZipFile(BytesIO(response.read())) as zipfile:
+		for info in zipfile.infolist():
+			if info.is_dir():
+				continue
+			filename = info.filename
+			path = GAME_PATH / Path(filename.split('/', 1)[1])
+			path.dirname().makedirs_p()
+			with open(path, 'wb') as f:
+				f.write(zipfile.read(filename))
+		apply() 
+		print('[Zombie Riot] Extracted the files. Progress 80%')
+        
+def apply():
+	print('[Zombie Riot] Auto update finished. Progress 100%')
+	if zr.auto_updater:
+		queue_command_string('sp plugin reload zr')
+	else:
+		print('[Zombie Riot] In order to apply the changes please restart the server or reload plugin')
 
 @ServerCommand('zr_update')
 def zr_update(command):
 	if version_checker() > Ver:
 		download()
-		if zr.auto_updater:
-			queue_command_string('sp plugin reload zr')
-			print('[Zombie Riot] New version have installed and applyed the changes!')
-		else:
-			echo_console('[Zombie Riot] Newest version of plugin have downloaded!. Please restart the server for apply changes')
 	else:
 		echo_console('[Zombie Riot] There is no new version available to download')
