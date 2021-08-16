@@ -100,10 +100,19 @@ def getUseridList():
 def centertell(userid, text):
 	TextMsg(message=text, destination=4).send(index_from_userid(userid))
 
+@PreEvent('item_pickup')
+def item_pickup(args):
+	player = ZombiePlayer.from_userid(args['userid'])
+	if player.is_bot():
+		if player.primary:
+			player.primary.remove()
+		if player.secondary:
+			player.secondary.remove()
+
 @Event('item_pickup') # Is called when players pick up a weapon
 def item_pickup(args):
 	player = ZombiePlayer.from_userid(args['userid'])
-	if not player.is_bot():
+	if not player.is_bot(): # Is not a bot
 		if GAME_NAME == 'cstrike':
 			weapon = args.get_string('item')
 			if weapon in secondaries():
@@ -427,19 +436,9 @@ def player_hurt(args):
 				killer = Player.from_userid(args['attacker'])
 				if not victim.team == killer.team:
 					burn(args.get_int('userid'), 10)
-@Event('player_hurt')
-def player_hurt(args):
-	global _loaded
-	if _loaded > 0:
-		userid = args.get_int('userid')
-		if args.get_int('attacker') > 0:
-			victim = Player.from_userid(args['userid'])
-			killer = Player.from_userid(args['attacker'])
-			if not victim.team == killer.team:
 				if not killer.is_bot():
 					player = ZombiePlayer.from_userid(args['attacker'])
 					player.player_target = userid
-
 #==================================
 # Menu Call Backs
 #==================================
