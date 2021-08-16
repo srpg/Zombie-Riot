@@ -117,7 +117,6 @@ def pre_buy(args):
 		player = ZombiePlayer(index_from_pointer(args[0]))
 		weapon = args[1]
 		if GAME_NAME == 'cstrike':
-			player = ZombiePlayer.from_userid(args['userid'])
 			weapon = args.get_string('item')
 			if weapon in secondaries():
 				player.weapon_secondary = weapon
