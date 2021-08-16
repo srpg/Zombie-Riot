@@ -1,8 +1,6 @@
 import os, path, random
 from core import GAME_NAME, echo_console
 from entities.entity import Entity
-from entities.hooks import EntityPreHook, EntityCondition
-from entities.helpers import index_from_pointer
 from events import Event
 from events.hooks import PreEvent, EventAction
 from players.helpers import index_from_userid, userid_from_index
@@ -67,10 +65,16 @@ class ZombiePlayer(Player):
 		self.player_target          = False
 
 def secondaries():
-	return ['usp','glock','deagle','p228','elite','fiveseven']
+	if GAME_NAME == 'cstrike':
+		return ['usp','glock','deagle','p228','elite','fiveseven']
+	else:
+		print(f'[Zombie Riot] does not have defined weapons for {GAME_NAME}')
 
 def rifles():
-	return ['m4a1','ak47','awp','scout','sg552','galil','famas','aug','ump45','mp5navy','m3','xm1014','tmp','mac10','p90','g3sg1','sg550','m249']
+	if GAME_NAME == 'cstrike':
+		return ['m4a1','ak47','awp','scout','sg552','galil','famas','aug','ump45','mp5navy','m3','xm1014','tmp','mac10','p90','g3sg1','sg550','m249']
+	else:
+		print(f'[Zombie Riot] does not have defined weapons for {GAME_NAME}')
 
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
@@ -96,18 +100,19 @@ def getUseridList():
 def centertell(userid, text):
 	TextMsg(message=text, destination=4).send(index_from_userid(userid))
 
-@EntityPreHook(EntityCondition.is_player, 'buy_internal')
-def pre_buy(args):
-	try:
-		player = ZombiePlayer(index_from_pointer(args[0]))
-		weapon = args[1]
+@Event('item_pickup') # Is called when players pick up a weapon
+def item_pickup(args):
+	if GAME_NAME == 'cstrike':
+		player = ZombiePlayer.from_userid(args['userid'])
+		weapon = args.get_string('item')
 		if weapon in secondaries():
 			player.weapon_secondary = weapon
 		elif weapon in rifles():
 			player.weapon_rifle = weapon
-	except KeyError:
-		return
-    
+			
+	else:
+		print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
+
 @PreEvent('server_cvar', 'player_team', 'player_disconnect', 'player_connect_client')
 def pre_events(game_event):
 	global _loaded
