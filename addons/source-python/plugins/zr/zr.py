@@ -20,6 +20,8 @@ from stringtables.downloads import Downloadables
 from colors import Color
 from colors import GREEN, LIGHT_GREEN, RED
 from menus import Text, SimpleMenu, PagedMenu, SimpleOption
+from entities.hooks import EntityPreHook, EntityCondition
+from entities.helpers import index_from_pointer
 from listeners import OnLevelShutdown
 from zr.modules import admin
 from zr.modules import market 
@@ -109,18 +111,20 @@ def item_pickup(args):
 		if player.secondary:
 			player.secondary.remove()
 
-@Event('item_pickup') # Is called when players pick up a weapon
-def item_pickup(args):
-	player = ZombiePlayer.from_userid(args['userid'])
-	if not player.is_bot(): # Is not a bot
+@EntityPreHook(EntityCondition.is_player, 'buy_internal')
+def pre_buy(args):
+	try:
+		player = ZombiePlayer(index_from_pointer(args[0]))
+		weapon = args[1]
 		if GAME_NAME == 'cstrike':
+			player = ZombiePlayer.from_userid(args['userid'])
 			weapon = args.get_string('item')
 			if weapon in secondaries():
 				player.weapon_secondary = weapon
 			elif weapon in rifles():
 				player.weapon_rifle = weapon
-		else:
-			print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
+	except KeyError:
+		return
 
 @PreEvent('server_cvar', 'player_team', 'player_disconnect', 'player_connect_client')
 def pre_events(game_event):
@@ -435,15 +439,15 @@ def build_hudmessage(userid):
 def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
-		if args.get_int('attacker') > 0:
-			victim = Player.from_userid(args['userid'])
-			killer = Player.from_userid(args['attacker'])
-			if not victim.team == killer.team:
-				if args.get_string('weapon') == 'hegrenade' and fire:
+		if args.get_string('weapon') == 'hegrenade' and fire:
+			if args.get_int('attacker') > 0:
+				victim = Player.from_userid(args['userid'])
+				killer = Player.from_userid(args['attacker'])
+				if not victim.team == killer.team:
 					burn(args.get_int('userid'), 10)
 				if not killer.is_bot():
 					player = ZombiePlayer.from_userid(args['attacker'])
-					player.player_target = args.get_int('userid')
+					player.player_target = userid
 #==================================
 # Menu Call Backs
 #==================================

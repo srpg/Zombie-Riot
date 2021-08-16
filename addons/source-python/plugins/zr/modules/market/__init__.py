@@ -6,6 +6,7 @@ from filters.weapons import WeaponClassIter
 from weapons.manager import weapon_manager
 from zr import zr
 from zr.modules import message
+from messages import SayText2
 
 def weapons_menu(userid):
 	menu = SimpleMenu()
@@ -48,13 +49,17 @@ def main_menu_callback(_menu, _index, _option):
 		if choice == 'rebuy':
 			if zr.isAlive(userid):
 				weapon = player.get_active_weapon()
-				if player.cash >= 1000 and not weapon.classname.replace('weapon_', '', 1) in ['knife', 'hegrenade', 'flashbang', 'smokegrenade'] and not weapon.clip == weapon_manager[weapon.classname].clip:
-					player.cash -= 1000
-					weapon.clip = weapon_manager[weapon.classname].clip
-					weapon.ammo = weapon_manager[weapon.classname].maxammo
-					message.Rebuy.send(_index, weapon=weapon.classname.replace('weapon_', '', 1), cost=1000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if weapon.classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles() and not weapon.clip == weapon_manager[weapon.classname].clip:
+					if player.cash >= 1000:
+						player.cash -= 1000
+						weapon.clip = weapon_manager[weapon.classname].clip
+						weapon.ammo = weapon_manager[weapon.classname].maxammo
+						message.Rebuy.send(_index, weapon=weapon.classname.replace('weapon_', '', 1), cost=1000, red=zr.red,green=zr.green,light_green=zr.light_green)
+					else:
+						message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
+					weapon = weapon.classname.replace('weapon_', '', 1).title()
+					SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}Your {zr.green}{weapon} {zr.light_green}have {zr.green}full clip').send(player.index)
 			else:
 				message.Alive.send(_index, type="rebuy bullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'secondary':
