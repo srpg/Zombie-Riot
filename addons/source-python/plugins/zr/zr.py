@@ -435,11 +435,11 @@ def build_hudmessage(userid):
 def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
-		if args.get_string('weapon') == 'hegrenade' and fire:
-			if args.get_int('attacker') > 0:
-				victim = Player.from_userid(args['userid'])
-				killer = Player.from_userid(args['attacker'])
-				if not victim.team == killer.team:
+		if args.get_int('attacker') > 0:
+			victim = Player.from_userid(args['userid'])
+			killer = Player.from_userid(args['attacker'])
+			if not victim.team == killer.team:
+				if args.get_string('weapon') == 'hegrenade' and fire:
 					burn(args.get_int('userid'), 10)
 				if not killer.is_bot():
 					player = ZombiePlayer.from_userid(args['attacker'])
