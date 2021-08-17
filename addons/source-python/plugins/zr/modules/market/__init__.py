@@ -28,7 +28,7 @@ def secondary_weapons_menu(userid):
 	if zr.is_queued(menu, index_from_userid(userid)):
 		return
 	for weapon in WeaponClassIter(is_filters='pistol'):
-		menu.append(PagedOption('%s: %s$' % (weapon.basename.upper(), weapon.cost), weapon, Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid), Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid)))
+		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid), Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid)))
 	menu.select_callback = secondary_menu_callback
 	menu.send(index_from_userid(userid))
 
@@ -37,7 +37,7 @@ def primary_weapons_menu(userid):
 	if zr.is_queued(menu, index_from_userid(userid)):
 		return
 	for weapon in WeaponClassIter(is_filters='primary'):
-		menu.append(PagedOption('%s: %s$' % (weapon.basename.upper(), weapon.cost), weapon, Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid), Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid)))
+		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid), Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid)))
 	menu.select_callback = primary_menu_callback
 	menu.send(index_from_userid(userid))
   
@@ -111,7 +111,7 @@ def secondary_menu_callback(_menu, _index, _option):
 				player.give_named_item('%s' % (choice.name))
 				message.Weapon.send(_index, weapon=choice.basename.upper(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 				zr_player = zr.ZombiePlayer.from_userid(userid)
-				zr_player.weapon_secondary = choice.basename.upper()
+				zr_player.weapon_secondary = choice.basename
 				weapons_menu(userid)
 			else:
 				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
@@ -132,7 +132,7 @@ def primary_menu_callback(_menu, _index, _option):
 				player.give_named_item('%s' % (choice.name))
 				message.Weapon.send(_index, weapon=choice.basename.upper(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 				zr_player = zr.ZombiePlayer.from_userid(userid)
-				zr_player.weapon_rifle = choice.basename.upper()
+				zr_player.weapon_rifle = choice.basename
 				weapons_menu(userid)
 			else:
 				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)

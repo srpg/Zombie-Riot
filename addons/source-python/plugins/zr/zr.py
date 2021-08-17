@@ -66,6 +66,13 @@ class ZombiePlayer(Player):
 		self.weapon_secondary 		= False
 		self.player_target          = False
 
+def strip_weapons(userid):
+	player = Player.from_userid(userid)
+	if player.primary:
+		player.primary.remove()
+	if player.secondary:
+		player.secondary.remove()
+
 def secondaries():
 	if GAME_NAME == 'cstrike':
 		return ['usp','glock','deagle','p228','elite','fiveseven']
@@ -239,6 +246,7 @@ def player_spawn(args):
 		userid = args.get_int('userid')
 		player = Player(index_from_userid(userid))
 		if player.team == 2: # Is a terrorist team
+			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
 			value = _day
 			_health = get_health(value)
@@ -254,11 +262,11 @@ def player_spawn(args):
 			if not zr_player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				zr_player.welcome_message = True
-			if not zr_player.weapon_secondary == None:
+			if zr_player.weapon_secondary:
 				if player.secondary:
 					player.secondary.remove()
 				player.give_named_item(f'weapon_{zr_player.weapon_secondary}')
-			if not zr_player.weapon_rifle == None:
+			if zr_player.weapon_rifle:
 				if player.primary:
 					player.primary.remove()
 				player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
