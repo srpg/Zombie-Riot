@@ -254,6 +254,14 @@ def player_spawn(args):
 			if not zr_player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				zr_player.welcome_message = True
+			if not zr_player.weapon_secondary == None:
+				if player.secondary:
+					player.secondary.remove()
+				player.give_named_item(f'weapon_{zr_player.weapon_secondary}')
+			if not zr_player.weapon_rifle == None:
+				if player.primary:
+					player.primary.remove()
+				player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
 			global _humans
 			_humans += 1
 			message.Game.send(player.index,green=green,light_green=light_green)
@@ -326,7 +334,7 @@ def player_death(args):
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
 		if attacker > 0:
-			victim = Player.from_userid(args['userid'])
+			victim = ZombiePlayer.from_userid(args['userid'])
 			killer = Player.from_userid(args['attacker'])
 			if victim.team == 3: # Is a ct
 				if userid == attacker: # Did ct just suicide
@@ -336,6 +344,8 @@ def player_death(args):
 					_value -= 1
 			if not victim.team == killer.team:
 				if victim.team == 3: 
+					victim.weapon_rifle = None
+					victim.weapon_secondary = None
 					_humans -= 1
 					if _humans > 0:
 						victim.delay(0.1, timer, (userid, 30, 1))
@@ -439,11 +449,11 @@ def build_hudmessage(userid):
 def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
-		if args.get_string('weapon') == 'hegrenade' and fire:
-			if args.get_int('attacker') > 0:
-				victim = Player.from_userid(args['userid'])
-				killer = Player.from_userid(args['attacker'])
-				if not victim.team == killer.team:
+		if args.get_int('attacker') > 0:
+			victim = Player.from_userid(args['userid'])
+			killer = Player.from_userid(args['attacker'])
+			if not victim.team == killer.team:
+				if args.get_string('weapon') == 'hegrenade' and fire:
 					burn(args.get_int('userid'), 10)
 				if not killer.is_bot():
 					player = ZombiePlayer.from_userid(args['attacker'])
