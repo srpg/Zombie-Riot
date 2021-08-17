@@ -43,6 +43,7 @@ server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
 fire = 1 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
 info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disabled
 auto_updater = 1 # 1 = Enable automatic updating when server start and new version available
+save_weapon = 1 # Enable to save weapons from death
 #===================
 # Def/Global functions
 #===================
@@ -352,8 +353,9 @@ def player_death(args):
 					_value -= 1
 			if not victim.team == killer.team:
 				if victim.team == 3: 
-					victim.weapon_rifle = None
-					victim.weapon_secondary = None
+					if not save_weapon == 1:
+						victim.weapon_rifle = None
+						victim.weapon_secondary = None
 					_humans -= 1
 					if _humans > 0:
 						victim.delay(0.1, timer, (userid, 30, 1))
