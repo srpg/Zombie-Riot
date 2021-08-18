@@ -124,13 +124,16 @@ def pre_buy(args):
 	try:
 		player = ZombiePlayer(index_from_pointer(args[0]))
 		weapon = args[1]
-		if GAME_NAME == 'cstrike':
-			if weapon in secondaries():
-				player.weapon_secondary = weapon
-			elif weapon in rifles():
-				player.weapon_rifle = weapon
+		if not player.is_bot():
+			if GAME_NAME == 'cstrike':
+				if weapon in secondaries():
+					player.weapon_secondary = weapon
+				elif weapon in rifles():
+					player.weapon_rifle = weapon
+			else:
+				print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
 		else:
-			print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
+			stript_weapons(player.userid)
 	except KeyError:
 		return
 
@@ -346,12 +349,6 @@ def player_death(args):
 		if attacker > 0:
 			victim = ZombiePlayer.from_userid(args['userid'])
 			killer = Player.from_userid(args['attacker'])
-			if victim.team == 3: # Is a ct
-				if userid == attacker: # Did ct just suicide
-					_humans -= 1
-			elif victim.team == 2: # Is a zombie
-				if userid == attacker: # Did zombie just suicide
-					_value -= 1
 			if not victim.team == killer.team:
 				if victim.team == 3: 
 					if not save_weapon == 1:
@@ -380,6 +377,10 @@ def player_death(args):
 					for player in PlayerIter('all'):
 						player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
 						player.delay(3, cancel_overplay, (player.index,))
+		player = Player.from_userid(userid)
+		if player.team == 2 and _value > 20: # Is more than 20 bots to respawn
+			_value -= 1
+			player.delay(0.1, respawn, (userid,))
 
 def cancel_overplay(index):
 	player = Player(index)
