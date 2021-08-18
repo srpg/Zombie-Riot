@@ -375,10 +375,10 @@ def player_death(args):
 					for player in PlayerIter('all'):
 						player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
 						player.delay(3, cancel_overplay, (player.index,))
-				if _value < 2:
-					for player in PlayerIter('bot'):
-						beacon_id = player.userid
-						admin.beacon(beacon_id)
+					if _value < 2:
+						for player in PlayerIter('bot'):
+							beacon_id = player.userid
+							admin.beacon(beacon_id)
 
 def cancel_overplay(index):
 	player = Player(index)
