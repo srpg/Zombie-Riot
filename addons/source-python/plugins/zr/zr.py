@@ -343,7 +343,7 @@ def player_death(args):
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
 		if attacker > 0:
-			victim = Zombie.from_userid(args['userid'])
+			victim = ZombiePlayer.from_userid(args['userid'])
 			killer = Player.from_userid(args['attacker'])
 			if victim.team == 3: # Is a ct
 				if userid == attacker: # Did ct just suicide
