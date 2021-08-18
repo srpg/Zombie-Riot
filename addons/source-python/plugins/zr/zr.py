@@ -249,6 +249,7 @@ def player_spawn(args):
 		if player.team == 2: # Is a terrorist team
 			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
+			strip_weapons(userid)
 			value = _day
 			_health = get_health(value)
 			_model = get_model(value)
