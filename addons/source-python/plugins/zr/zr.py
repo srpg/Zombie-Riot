@@ -133,7 +133,7 @@ def pre_buy(args):
 			else:
 				print(f'[Zombie Riot] This plugin does not have weapons data for {GAME_NAME}')
 		else:
-			stript_weapons(player.userid)
+			strip_weapons(player.userid)
 	except KeyError:
 		return
 
