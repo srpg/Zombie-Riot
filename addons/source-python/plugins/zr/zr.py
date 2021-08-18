@@ -343,7 +343,7 @@ def player_death(args):
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
 		if attacker > 0:
-			victim = ZombiePlayer.from_userid(args['userid'])
+			victim = Player.from_userid(args['userid'])
 			killer = Player.from_userid(args['attacker'])
 			if victim.team == 3: # Is a ct
 				if userid == attacker: # Did ct just suicide
@@ -353,9 +353,6 @@ def player_death(args):
 					_value -= 1
 			if not victim.team == killer.team:
 				if victim.team == 3: 
-					if not save_weapon == 1:
-						victim.weapon_rifle = None
-						victim.weapon_secondary = None
 					_humans -= 1
 					if _humans > 0:
 						victim.delay(0.1, timer, (userid, 30, 1))
@@ -364,6 +361,10 @@ def player_death(args):
 					if not _value == alive_zombies(): # Works better than if _value > 19
 						if _humans > 0:
 							Delay(0.1, respawn, (userid,))
+					if _value < 2:
+						for player in PlayerIter('bot'):
+							beacon_id = player.userid
+							admin.beacon(beacon_id)
 					if _value == 0:
 						Delay(0.1, won)
 						for player in PlayerIter('bot'):
@@ -375,10 +376,6 @@ def player_death(args):
 					for player in PlayerIter('all'):
 						player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
 						player.delay(3, cancel_overplay, (player.index,))
-					if _value < 2:
-						for player in PlayerIter('bot'):
-							beacon_id = player.userid
-							admin.beacon(beacon_id)
 
 def cancel_overplay(index):
 	player = Player(index)
