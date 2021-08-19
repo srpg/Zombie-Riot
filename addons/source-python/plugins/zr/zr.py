@@ -200,8 +200,10 @@ def load():
 
 def unload():
 	global _loaded
+	global _value
 	stop_loop()
 	_loaded = 0
+	_value = 0
                 
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).dead
