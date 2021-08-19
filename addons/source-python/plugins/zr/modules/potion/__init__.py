@@ -34,79 +34,106 @@ def potion_menu_callback(_menu, _index, _option):
 		player = Player(index_from_userid(userid))
 		if choice == 'full_health':
 			if zr.isAlive(userid):
-				player.health += player.max_health
-				player.cash -= 12000
-				message.Potion.send(_index, type="full health", cost=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 12000:
+					player.health += player.max_health
+					player.cash -= 12000
+					message.Potion.send(_index, type="full health", cost=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'half_health':
 			if zr.isAlive(userid):
-				bonus = int(player.max_health / 2)
-				player.health += bonus
-				player.cash -= 6000
-				message.Potion.send(_index, type="half health", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 6000:
+					bonus = int(player.max_health / 2)
+					player.health += bonus
+					player.cash -= 6000
+					message.Potion.send(_index, type="half health", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_health':
 			if zr.isAlive(userid):
-				bonus = int(player.max_health / 4)
-				player.health += bonus
-				player.cash -= 3000
-				message.Potion.send(_index, type="25% health", cost=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 3000:
+					bonus = int(player.max_health / 4)
+					player.health += bonus
+					player.cash -= 3000
+					message.Potion.send(_index, type="25% health", cost=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_bullets':
 			if zr.isAlive(userid):
-				if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
-					player.cash -= 14000
-					weapon = player.get_active_weapon()
-					weapon.clip = weapon_manager[weapon.classname].clip
-					weapon.ammo = weapon_manager[weapon.classname].maxammo
-					message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
+				if player.cash >= 14000:
+					if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
+						player.cash -= 14000
+						weapon = player.get_active_weapon()
+						weapon.clip = weapon_manager[weapon.classname].clip
+						weapon.ammo = weapon_manager[weapon.classname].maxammo
+						message.Potion.send(_index, type="full bullets", red=zr.red,cost=14000, green=zr.green,light_green=zr.light_green)
+					else:
+						message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
 			if zr.isAlive(userid):
-				bonus = player.speed / 4
-				player.speed += bonus
-				player.cash -= 3000
-				message.Potion.send(_index, type="25% speed", cost=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 3000:
+					bonus = player.speed / 4
+					player.speed += bonus
+					player.cash -= 3000
+					message.Potion.send(_index, type="25% speed", cost=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'half_speed':
 			if zr.isAlive(userid):
-				bonus = player.speed / 2
-				player.speed += bonus
-				player.cash -= 6000
-				message.Potion.send(_index, type="half speed", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 6000:
+					bonus = player.speed / 2
+					player.speed += bonus
+					player.cash -= 6000
+					message.Potion.send(_index, type="half speed", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_speed':
 			if zr.isAlive(userid):
-				player.speed += player.speed
-				player.cash -= 12000
-				message.Potion.send(_index, type="full speed", cost=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 12000:
+					player.speed += player.speed
+					player.cash -= 12000
+					message.Potion.send(_index, type="full speed", cost=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'infi_bullets':
 			if zr.isAlive(userid):
-				if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
-					player.get_active_weapon().clip = weapon_manager[player.get_active_weapon().classname].clip
-					player.cash -= 16000
-					user = zr.ZombiePlayer.from_userid(userid)
-					user.infinity_bullets = True
-					message.Potion.send(_index, type="infinity bullets", cost=16000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 16000:
+					if player.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
+						player.get_active_weapon().clip = weapon_manager[player.get_active_weapon().classname].clip
+						player.cash -= 16000
+						user = zr.ZombiePlayer.from_userid(userid)
+						user.infinity_bullets = True
+						message.Potion.send(_index, type="infinity bullets", cost=16000, red=zr.red,green=zr.green,light_green=zr.light_green)
+					else:
+						message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'respawn':
 			if not zr.isAlive(userid) and zr._humans > 0:
-				player.delay(0.1, zr.respawn, (userid,))
-				player.cash -= 6000
-				message.Potion.send(_index, type="respawn", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				if player.cash >= 6000:
+					player.delay(0.1, zr.respawn, (userid,))
+					player.cash -= 6000
+					message.Potion.send(_index, type="respawn", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
+				else:
+					pass # Todo add a message you don't enough cash
 			else:
 				message.Dead.send(_index, green=zr.green,light_green=zr.light_green)
 
