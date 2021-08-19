@@ -114,6 +114,9 @@ def zombie_menu_callback(_menu, _index, _option):
 		userid = userid_from_index(_index)
 		player = Player(index_from_userid(userid))
 		player.delay(1, beacon, (choice,))
+		target = Player.from_userid(choice)
+		zombies_players_menu(userid)
+		SayText2(f' {zr.green}{player.name} {zr.light_green}has beaconed {zr.green}{target.name}').send()
 
 def beacon(userid):
 	global can_beacon

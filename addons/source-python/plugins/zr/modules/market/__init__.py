@@ -27,8 +27,9 @@ def secondary_weapons_menu(userid):
 	menu = PagedMenu(title='Secondary Weapons\n')
 	if zr.is_queued(menu, index_from_userid(userid)):
 		return
+	player = Player.from_userid(userid)
 	for weapon in WeaponClassIter(is_filters='pistol'):
-		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid), Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid)))
+		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, player.cash >= weapon.cost and zr.isAlive(userid), player.cash >= weapon.cost and zr.isAlive(userid)))
 	menu.select_callback = secondary_menu_callback
 	menu.send(index_from_userid(userid))
 
@@ -36,8 +37,9 @@ def primary_weapons_menu(userid):
 	menu = PagedMenu(title='Primary Weapons\n')
 	if zr.is_queued(menu, index_from_userid(userid)):
 		return
+	player = Player.from_userid(userid)
 	for weapon in WeaponClassIter(is_filters='primary'):
-		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid), Player(index_from_userid(userid)).cash >= weapon.cost and zr.isAlive(userid)))
+		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, player.cash >= weapon.cost and zr.isAlive(userid), player.cash >= weapon.cost and zr.isAlive(userid)))
 	menu.select_callback = primary_menu_callback
 	menu.send(index_from_userid(userid))
   
