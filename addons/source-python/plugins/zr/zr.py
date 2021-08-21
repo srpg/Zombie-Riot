@@ -383,7 +383,7 @@ def cancel_overplay(index):
 def won():
 	global _day
 	global _value
-	if _value == 0:
+	if _value < 1: # Checks zombie have less than 1
 		if _day == max_day():
 			Delay(0.1, winner)
 		_day += 1
@@ -527,7 +527,7 @@ def info_menu(userid):
 	menu.append(Text(' '))
 	menu.append(Text('About Zombie Riot:'))
 	menu.append(Text('- Made by F1N/srpg'))
-	menu.append(Text('- Is still in developing'))
+	menu.append(Text('- Receives small bug fixes'))
 	menu.append(Text('- Has unigue support for clan tag'))
 	menu.append(Text(' '))
 	menu.append(Text('About Clan Tag:'))
