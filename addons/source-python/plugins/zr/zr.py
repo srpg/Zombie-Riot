@@ -15,7 +15,7 @@ from commands.client import ClientCommandFilter
 from configobj import ConfigObj
 from filters.weapons import WeaponClassIter, WeaponIter
 from weapons.manager import weapon_manager
-from messages import TextMsg, HintText
+from messages import TextMsg, HintText, SayText2
 from stringtables.downloads import Downloadables
 from colors import Color
 from colors import GREEN, LIGHT_GREEN, RED
@@ -246,12 +246,13 @@ def player_spawn(args):
 		if player.team == 2: # Is a terrorist team
 			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
-			value = _day
-			_health = get_health(value)
-			_model = get_model(value)
-			player.health = _health
-			player.set_model(Model(_model))
 			remove_idle_weapons()
+			if not int(_day) > max_day():
+				value = _day
+				_health = get_health(value)
+				_model = get_model(value)
+				player.health = _health
+				player.set_model(Model(_model))
 		player.noblock = True
 		player.cash = 12000
 		name = player.name
@@ -386,11 +387,24 @@ def won():
 			Delay(0.1, winner)
 		_day += 1
             
-def winner(): # Add random map change when win game?
+def winner():
+	mapDir = os.listdir("%s/maps" % GAME_NAME)
+	next_map = random.choice(mapDir).replace('.bsp', '', 1).replace('.nav', '', 1)
+	SayText2(f'{green}[Zombie Riot] » {light_green} map will be changed to {green}{next_map}').send()
+	Delay(4, change_map, (next_map,))
+	Delay(3, tell, (1,))
+	Delay(2, tell, (2,))
+	Delay(1, tell, (3,))
 	global _day
 	message.Won.send(red=red,green=green,light_green=light_green)
 	message.New.send(red=red,green=green,light_green=light_green)
 	_day = 1
+
+def change_map(next_map):
+	queue_command_string(f'changelevel {next_map}')
+
+def tell(msg):
+	SayText2(f'{green}[Zombie Riot] » {light_green} {msg} seconds to {green}map change!').send()
 
 def burn(userid, duration):
 	try:
@@ -462,7 +476,7 @@ def player_hurt(args):
 					burn(userid, 10)
 				if not killer.is_bot():
 					killer.player_target = userid
-					clan_tag.deal_hurt(attacker, userid)
+					clan_tag.deal_hurt(args.get_int('attacker'), userid)
 #==================================
 # Menu Call Backs
 #==================================
