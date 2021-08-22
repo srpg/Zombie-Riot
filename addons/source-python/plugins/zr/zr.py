@@ -342,6 +342,9 @@ def player_death(args):
 		global _value
 		global _day
 		userid = args.get_int('userid')
+		attacker = args.get_int('attacker')
+		if attacker > 0:
+			clan_tag.deal_death(attacker, userid)
 		victim = ZombiePlayer.from_userid(userid)
 		if victim.team == 2:
 			_value -= 1
