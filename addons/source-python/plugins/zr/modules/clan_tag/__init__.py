@@ -1,12 +1,9 @@
 import random
-from events import Event
 from players.entity import Player
 from weapons.manager import weapon_manager
 from zr import zr
 
-@Event('player_spawn')
-def player_spawn(args):
-	userid = args.get_int('userid')
+def deal_spawn(userid):
 	player = Player.from_userid(userid)
 	if player.clan_tag in zr.server_clan:
 		player.max_health += 25
