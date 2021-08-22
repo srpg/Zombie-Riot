@@ -453,13 +453,15 @@ def player_hurt(args):
 	global _loaded
 	if _loaded > 0:
 		if args.get_int('attacker') > 0:
+			userid = args.get_int('userid')
 			victim = Player.from_userid(args['userid'])
 			killer = ZombiePlayer.from_userid(args['attacker'])
 			if not victim.team == killer.team:
 				if args.get_string('weapon') == 'hegrenade' and fire:
-					burn(args.get_int('userid'), 10)
+					burn(userid, 10)
 				if not killer.is_bot():
-					killer.player_target = args.get_int('userid')
+					killer.player_target = userid
+					clan_tag.deal_hurt(attacker, userid)
 #==================================
 # Menu Call Backs
 #==================================
