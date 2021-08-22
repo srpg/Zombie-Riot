@@ -18,7 +18,7 @@ def deal_death(attacker):
 		play = Player.from_userid(attacker)
 		if not play.is_bot() and play.clan_tag in zr.server_clan:
 			if not play.max_health > 145 and not play.health > 145:
-				play.max_health += 5:
+				play.max_health += 5
 				play.health += 5
 			if not play.speed > 1.5:
 				play.speed += 5
