@@ -256,7 +256,7 @@ def player_spawn(args):
 		player.cash = 12000
 		name = player.name
 		if player.team == 3:
-			deal_spawn(userid)
+			clan_tag.deal_spawn(userid)
 			zr_player = ZombiePlayer.from_userid(args['userid'])
 			if not zr_player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
