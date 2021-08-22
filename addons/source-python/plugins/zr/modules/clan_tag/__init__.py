@@ -16,26 +16,19 @@ def player_spawn(args):
 		player.gravity = base
 		player.gravity -= 0.10 # Lowers gravity 10%
 
-@Event('player_death')
-def player_death(args):
-	userid = args.get_int('userid')
-	attacker = args.get_int('attacker')
+def deal_death(attacker):
 	if attacker > 0:
 		play = Player.from_userid(attacker)
 		if not play.is_bot() and play.clan_tag in zr.server_clan:
-			if not play.max_health > 145:
-				play.max_health += 5
-			if not play.health > 145:
+			if not play.max_health > 145 and not play.health > 145:
+				play.max_health += 5:
 				play.health += 5
 			if not play.speed > 1.5:
 				play.speed += 5
 				play.speed -= 4.95
 
 
-@Event('player_hurt')
-def player_hurt(args):
-	userid = args.get_int('userid')
-	attacker = args.get_int('attacker')
+def deal_hurt(attacker, userid):
 	if attacker > 0:
 		victim = Player.from_userid(userid)
 		hurter = Player.from_userid(attacker)
