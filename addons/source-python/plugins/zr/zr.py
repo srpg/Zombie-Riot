@@ -43,7 +43,8 @@ server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
 fire = 1 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
 info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disabled
 auto_updater = 1 # 1 = Enable automatic updating when server start and new version available
-save_weapon = 1 # Enable to save weapons from death
+save_weapon = 0 # Enable to save weapons from death
+give_weapon = 0 # Does player get his weapon replaced new ones, when die(Requires save_weapon = 1)
 #===================
 # Def/Global functions
 #===================
@@ -110,15 +111,6 @@ def getUseridList():
 def centertell(userid, text):
 	TextMsg(message=text, destination=4).send(index_from_userid(userid))
 
-@PreEvent('item_pickup')
-def item_pickup(args):
-	player = ZombiePlayer.from_userid(args['userid'])
-	if player.is_bot():
-		if player.primary:
-			player.primary.remove()
-		if player.secondary:
-			player.secondary.remove()
-
 @EntityPreHook(EntityCondition.is_player, 'buy_internal')
 def pre_buy(args):
 	try:
@@ -157,7 +149,7 @@ def sayfilter(command, index, teamonly):
 					main_menu(userid)
 					return False
 
-@ServerCommand('zombie_version')
+@ServerCommand('zombie_version') # Move this to version module?
 def zombie_version(command):
 	version.check_version()
 
@@ -254,7 +246,6 @@ def player_spawn(args):
 		if player.team == 2: # Is a terrorist team
 			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
-			strip_weapons(userid)
 			value = _day
 			_health = get_health(value)
 			_model = get_model(value)
@@ -269,14 +260,15 @@ def player_spawn(args):
 			if not zr_player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				zr_player.welcome_message = True
-			if zr_player.weapon_secondary:
-				if player.secondary:
-					player.secondary.remove()
-				player.give_named_item(f'weapon_{zr_player.weapon_secondary}')
-			if zr_player.weapon_rifle:
-				if player.primary:
-					player.primary.remove()
-				player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
+			if give_weapon == 1:
+				if zr_player.weapon_secondary:
+					if player.secondary:
+						player.secondary.remove()
+					player.give_named_item(f'weapon_{zr_player.weapon_secondary}')
+				if zr_player.weapon_rifle:
+					if player.primary:
+						player.primary.remove()
+					player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
 			global _humans
 			_humans += 1
 			message.Game.send(player.index,green=green,light_green=light_green)
@@ -308,7 +300,7 @@ def round_start(args):
 def player_activate(args):
 	global _loaded
 	if _loaded > 0:
-		player = ZombiePlayer.from_userid(args['userid'])
+		player = ZombiePlayer.from_userid(args['userid']) # Do i need this here?
 		player.joined_team              = False
 		player.welcome_message          = False
 		player.player_target            = False
@@ -332,12 +324,15 @@ def player_team(args):
 
 @Event('player_disconnect')
 def player_disconnect(args):
-	userid = args.get_int('userid')
-	if Player(index_from_userid(userid)).team == 3 and isAlive(userid):
-		global _loaded
-		if _loaded > 0:
-			global _humans
-			_humans -= 1
+	try: # This code reduces errors when server get restarted/closed
+		userid = args.get_int('userid')
+		if Player(index_from_userid(userid)).team == 3 and isAlive(userid):
+			global _loaded
+			if _loaded > 0:
+				global _humans
+				_humans -= 1
+	except:
+		pass
 
 @Event('player_death')
 def player_death(args):
@@ -355,8 +350,7 @@ def player_death(args):
 					victim.delay(0.1, respawn, (userid,))
 			if _value < 2:
 				for player in PlayerIter('bot'):
-					beacon_id = player.userid
-					admin.beacon(beacon_id)
+					admin.beacon(player.userid)
 			if _value == 0:
 				Delay(0.1, won)
 				for player in PlayerIter('bot'):
@@ -388,7 +382,7 @@ def won():
 			Delay(0.1, winner)
 		_day += 1
             
-def winner():
+def winner(): # Add random map change when win game?
 	global _day
 	message.Won.send(red=red,green=green,light_green=light_green)
 	message.New.send(red=red,green=green,light_green=light_green)
@@ -408,7 +402,7 @@ def timer(userid, duration, count):
 	global _humans
 	if _humans > 0:
 		if not isAlive(userid):
-			player = Player(index_from_userid(userid))
+			player = Player.from_userid(userid)
 			if player.team == 3:
 				centertell(userid, 'You will respawn in %s Seconds' % (duration - (count)))
 				count += 1
@@ -440,7 +434,7 @@ def build_hudmessage(userid):
 	global _day 
 	player = ZombiePlayer.from_userid(userid)
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
-	__msg__ += '\nZombies: %s' % (_value)
+	__msg__ += '\nZombies: %s' % (_value) # Add name for each day
 	__msg__ += '\nHumans: %s' % (_humans)
 	if not player.player_target == False:
 		target = Player.from_userid(player.player_target)
@@ -457,13 +451,12 @@ def player_hurt(args):
 	if _loaded > 0:
 		if args.get_int('attacker') > 0:
 			victim = Player.from_userid(args['userid'])
-			killer = Player.from_userid(args['attacker'])
+			killer = ZombiePlayer.from_userid(args['attacker'])
 			if not victim.team == killer.team:
 				if args.get_string('weapon') == 'hegrenade' and fire:
 					burn(args.get_int('userid'), 10)
 				if not killer.is_bot():
-					player = ZombiePlayer.from_userid(args['attacker'])
-					player.player_target = args.get_int('userid')
+					killer.player_target = args.get_int('userid')
 #==================================
 # Menu Call Backs
 #==================================
@@ -507,7 +500,9 @@ def potions_info_menu(userid):
 	menu.append(Text('About Potions'))
 	menu.append(Text('-' * 30))
 	menu.append(Text('- Health potions is based of your total health.'))
+	menu.append(Text('- Health potions adds more health of your current health.))
 	menu.append(Text('- Speed potions is based of your current speed.'))
+	menu.append(Text('- Speed potions adds more speed of your current speed.))
 	menu.append(Text('- The purchased potions only last to:'))
 	menu.append(Text('- Death or new round start'))
 	menu.append(Text('-' * 30))
@@ -553,7 +548,7 @@ def main_menu(userid):
 	menu.append(SimpleOption(2, 'Potions', 'potion'))
 	menu.append(SimpleOption(3, 'Info', 'info'))
 	if admin.get_admin(userid):
-		menu.append(SimpleOption(4, 'Admin', 'admin_menu'))
+		menu.append(SimpleOption(4, 'Admin', 'admin_menu')) # Move this option in admin module?
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = main_menu_callback
