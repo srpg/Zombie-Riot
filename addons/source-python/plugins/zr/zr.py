@@ -97,6 +97,16 @@ def alive_zombies():
 def real_count():
 	return alive() # Apperently this code counts basic amount of ct's
 
+def bomb_target(enable):
+	for i in EntityIter.iterator():
+		if i.classname.startswith('func_bomb'):
+			i.call_input(['Disable', 'Enable'][int(bool(enable))])
+
+def buyzone(enable):
+	for i in EntityIter.iterator():
+		if i.classname.startswith('func_buyzone'):
+			i.call_input(['Disable', 'Enable'][int(bool(enable))])
+
 def hudhint(userid, text):
 	HintText(message=text).send(index_from_userid(userid))
 
@@ -187,10 +197,8 @@ def load():
 			echo_console('[Zombie Riot] Version: Beta')
 			echo_console('[Zombie Riot] Loaded Completely')
 			queue_command_string('mp_restartgame 1')
-			for i in EntityIter('func_bomb'):
-				i.call_input('Disable')
-			for i in EntityIter('func_hostage'):
-				i.call_input('Disable')
+			buyzone(False)
+			hostage_rescue(False)
 			echo_console('***********************************************************')
 	else:
 		raise NotImplementedError('[Zombie Riot] This plugin doesn\'t support csgo!') 
@@ -201,10 +209,8 @@ def unload():
 	stop_loop()
 	_loaded = 0
 	_value = 0
-	for i in EntityIter('func_bomb'):
-		i.call_input('Enable')
-	for i in EntityIter('func_hostage'):
-		i.call_input('Enable')
+	buyzone(True)
+	hostage_rescue(True)
                 
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).dead
