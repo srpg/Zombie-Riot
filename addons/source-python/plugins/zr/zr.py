@@ -101,10 +101,10 @@ def bomb_target(enable):
 	for i in EntityIter.iterator():
 		if i.classname.startswith('func_bomb'):
 			i.call_input(['Disable', 'Enable'][int(bool(enable))])
-
-def buyzone(enable):
+            
+def hostage_rescue(enable):
 	for i in EntityIter.iterator():
-		if i.classname.startswith('func_buyzone'):
+		if i.classname.startswith('func_hostage'):
 			i.call_input(['Disable', 'Enable'][int(bool(enable))])
 
 def hudhint(userid, text):
