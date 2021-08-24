@@ -6,6 +6,7 @@ from events.hooks import PreEvent, EventAction
 from players.helpers import index_from_userid, userid_from_index
 from players.entity import Player
 from filters.players import PlayerIter
+from filters.entities import EntityIter
 from engines.precache import Model
 from engines.server import queue_command_string
 from listeners.tick import Delay
@@ -186,6 +187,10 @@ def load():
 			echo_console('[Zombie Riot] Version: Beta')
 			echo_console('[Zombie Riot] Loaded Completely')
 			queue_command_string('mp_restartgame 1')
+			for i in EntityIter('func_bomb'):
+				i.call_input('Disable')
+			for i in EntityIter('func_hostage'):
+				i.call_input('Disable')
 			echo_console('***********************************************************')
 	else:
 		raise NotImplementedError('[Zombie Riot] This plugin doesn\'t support csgo!') 
@@ -196,6 +201,10 @@ def unload():
 	stop_loop()
 	_loaded = 0
 	_value = 0
+	for i in EntityIter('func_bomb'):
+		i.call_input('Enable')
+	for i in EntityIter('func_hostage'):
+		i.call_input('Enable')
                 
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).dead
