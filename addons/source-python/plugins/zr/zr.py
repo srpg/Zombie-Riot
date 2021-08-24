@@ -197,7 +197,7 @@ def load():
 			echo_console('[Zombie Riot] Version: Beta')
 			echo_console('[Zombie Riot] Loaded Completely')
 			queue_command_string('mp_restartgame 1')
-			buyzone(False)
+			bomb_target(False)
 			hostage_rescue(False)
 			echo_console('***********************************************************')
 	else:
@@ -209,7 +209,7 @@ def unload():
 	stop_loop()
 	_loaded = 0
 	_value = 0
-	buyzone(True)
+	bomb_target(True)
 	hostage_rescue(True)
                 
 def isAlive(userid):
