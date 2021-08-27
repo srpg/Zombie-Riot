@@ -143,6 +143,12 @@ def round_end(args):
 		user = zr.ZombiePlayer.from_userid(i)
 		user.infinity_bullets = False
 
+@Event('round_start')
+def round_start(args):
+	for i in zr.getUseridList():
+		user = zr.ZombiePlayer.from_userid(i)
+		user.infinity_bullets = False
+
 @Event('player_death')
 def player_death(args):
 	victim = zr.ZombiePlayer.from_userid(args['userid'])
