@@ -470,11 +470,15 @@ def build_hudmessage(userid):
 	__msg__ += '\nZombies: %s' % (_value) # Add name for each day
 	__msg__ += '\nHumans: %s' % (_humans)
 	if not player.player_target == False:
-		target = Player.from_userid(player.player_target)
-		if not target.dead and target.health > 0:
-			__msg__ += '\n%s: %s' % (target.name, target.health)
-		else:
+		try:
+			target = Player.from_userid(player.player_target)
+			if not target.dead and target.health > 0:
+				__msg__ += '\n%s: %s' % (target.name, target.health)
+			else:
+				player.player_target = False
+		except:
 			player.player_target = False
+			pass
 
 	return __msg__
 
