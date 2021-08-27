@@ -403,16 +403,16 @@ def won():
 		_day += 1
             
 def winner():
-	mapDir = os.listdir("%s/maps" % GAME_NAME)
-	next_map = random.choice(mapDir).replace('.bsp', '', 1).replace('.nav', '', 1)
-	SayText2(f'{green}[Zombie Riot] » {light_green} map will be changed to {green}{next_map}').send()
-	Delay(4, change_map, (next_map,))
-	Delay(3, tell, (1,))
-	Delay(2, tell, (2,))
-	Delay(1, tell, (3,))
 	global _day
 	message.Won.send(red=red,green=green,light_green=light_green)
-	message.New.send(red=red,green=green,light_green=light_green)
+	mapDir = os.listdir("%s/maps" % GAME_NAME)
+	next_map = random.choice(mapDir).replace('.bsp', '', 1).replace('.nav', '', 1)
+	SayText2(f'{green}[Zombie Riot] » {light_green} Map will be changed to {green}{next_map}').send()
+	Delay(11, change_map, (next_map,))
+	Delay(10, tell, (1,))
+	Delay(9, tell, (2,))
+	Delay(8, tell, (3,))
+	Delay(1, tell, (10,))
 	_day = 1
 
 def change_map(next_map):
