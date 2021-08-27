@@ -46,6 +46,7 @@ info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disable
 auto_updater = 1 # 1 = Enable automatic updating when server start and new version available
 save_weapon = 0 # Enable to save weapons from death
 give_weapon = 0 # Does player get his weapon replaced new ones, when die(Requires save_weapon = 1)
+freeze_time = 10 # How many seconds zombies are frozen
 #===================
 # Def/Global functions
 #===================
@@ -312,6 +313,18 @@ def round_start(args):
 			echo_console('[Zombie Riot] Current Zombies Health: %s' % (_health))
 		echo_console('[Zombie Riot] Current Humans: %s' % (_humans))
 		echo_console('***********************************************************')
+
+@Event('round_freeze_end')
+def round_freeze_end(args):
+	for player in PlayerIter('bot'):
+		player.set_stuck(True)
+		player.set_godmode(True)
+		player.delay(freeze_time, un_freeze, (player.userid,))
+
+def un_freeze(userid):
+	player = Player.from_userid(userid)
+	player.set_stuck(False)
+	player.set_godmode(False)
 
 @Event('player_activate')
 def player_activate(args):
