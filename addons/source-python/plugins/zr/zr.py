@@ -221,7 +221,7 @@ def max_day():
 
 def get_days(value):
 	val = '%s' % (value)
-	return  int(_CONFIG[val]['amount'])
+	return int(_CONFIG[val]['amount'])
 
 def get_health(value):
 	val = '%s' % (value)
