@@ -232,7 +232,12 @@ def get_model(value):
 	val = '%s' % (value)
 	if not int(val) > max_day():
 		return  _CONFIG[val]['Model']
-    
+ 
+def get_speed(value):
+	val = '%s' % (value)
+	if not int(val) > max_day():
+		return  _CONFIG[val]['speed']
+
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
 	dl = Downloadables()
@@ -267,8 +272,10 @@ def player_spawn(args):
 				value = _day
 				_health = get_health(value)
 				_model = get_model(value)
+				_speed = get_speed(value)
 				player.health = _health
 				player.set_model(Model(_model))
+				player.speed = _speed
 		player.noblock = True
 		player.cash = 12000
 		name = player.name
