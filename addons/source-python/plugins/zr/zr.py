@@ -236,7 +236,7 @@ def get_model(value):
 def get_speed(value):
 	val = '%s' % (value)
 	if not int(val) > max_day():
-		return  _CONFIG[val]['speed']
+		return  float(_CONFIG[val]['speed'])
 
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
