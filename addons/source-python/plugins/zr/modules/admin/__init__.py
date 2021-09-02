@@ -18,7 +18,7 @@ can_beacon = True
 def round_start(args):
 	global can_beacon
 	can_beacon = True
-	for userid in zr.getUseridList():
+	for i in zr.getUseridList():
 		player = zr.ZombiePlayer.from_userid(i)
 		player.is_beaconned = False
 
@@ -26,7 +26,7 @@ def round_start(args):
 def round_end(args):
 	global can_beacon
 	can_beacon = False
-	for userid in zr.getUseridList():
+	for i in zr.getUseridList():
 		player = zr.ZombiePlayer.from_userid(i)
 		player.is_beaconned = True
 
