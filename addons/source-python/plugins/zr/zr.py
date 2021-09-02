@@ -69,6 +69,7 @@ class ZombiePlayer(Player):
 		self.weapon_rifle 		    = False
 		self.weapon_secondary 		= False
 		self.player_target          = False
+		self.is_beaconned           = False
 
 def strip_weapons(userid):
 	player = Player.from_userid(userid)
