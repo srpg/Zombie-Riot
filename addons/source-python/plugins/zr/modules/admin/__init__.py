@@ -122,15 +122,15 @@ def zombie_menu_callback(_menu, _index, _option):
 		player.delay(1, beacon, (choice,))
 		target = Player.from_userid(choice)
 		zombies_players_menu(userid)
-		SayText2(f' {zr.green}{player.name} {zr.light_green}has beaconed {zr.green}{target.name}').send()
+		SayText2(f'{zr.green}{player.name} {zr.light_green}has beaconed {zr.green}{target.name}').send()
 
 def beacon(userid):
 	global can_beacon
 	if zr.isAlive(userid) and can_beacon:
 		player = zr.ZombiePlayer(index_from_userid(userid))
 		if not player.is_beaconned:
-			player.is_beaconned = True
 			do_beacon(userid)
+			player.is_beaconned = True
 
 def do_beacon(userid):
 	global can_beacon
