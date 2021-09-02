@@ -47,6 +47,7 @@ auto_updater = 1 # 1 = Enable automatic updating when server start and new versi
 save_weapon = 0 # Enable to save weapons from death
 give_weapon = 0 # Does player get his weapon replaced new ones, when die(Requires save_weapon = 1)
 freeze_time = 10 # How many seconds zombies are frozen
+beacon_value = 4 # How much less zombies have remaining to beacon
 #===================
 # Def/Global functions
 #===================
@@ -385,11 +386,12 @@ def player_death(args):
 			clan_tag.deal_death(attacker)
 		victim = ZombiePlayer.from_userid(userid)
 		if victim.team == 2:
+			victim.is_beaconned = False
 			_value -= 1
 			if not _value == alive_zombies(): # Works better than if _value > 19
 				if _humans > 0:
 					victim.delay(0.1, respawn, (userid,))
-			if _value < 2:
+			if _value < beacon_value:
 				for player in PlayerIter('bot'):
 					admin.beacon(player.userid)
 			if _value == 0:
