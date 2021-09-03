@@ -44,8 +44,6 @@ server_name = 0 # Enable change server name to Zombie Riot Day [1/11]
 fire = 1 # 1 = Enable fire hegrenades to burn zombies, 0 = Disabled
 info_panel = 1 # 1 = Enable show left side of screen info of zombie, 0 = Disabled
 auto_updater = 1 # 1 = Enable automatic updating when server start and new version available
-save_weapon = 0 # Enable to save weapons from death
-give_weapon = 0 # Does player get his weapon replaced new ones, when die(Requires save_weapon = 1)
 freeze_time = 10 # How many seconds zombies are frozen
 beacon_value = 4 # How much less zombies have remaining to beacon
 #===================
@@ -256,8 +254,7 @@ def shutdown():
 	global _loaded
 	global _day
 	if _loaded > 0:
-		_day = 1
-    
+		_day = 1   
 
 @Event('player_spawn')
 def player_spawn(args):
@@ -266,7 +263,7 @@ def player_spawn(args):
 		global _health
 		global _day
 		userid = args.get_int('userid')
-		player = Player(index_from_userid(userid))
+		player = ZombiePlayerPlayer(index_from_userid(userid))
 		if player.team == 2: # Is a terrorist team
 			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
@@ -284,22 +281,16 @@ def player_spawn(args):
 		name = player.name
 		if player.team == 3:
 			clan_tag.deal_spawn(userid)
-			zr_player = ZombiePlayer.from_userid(args['userid'])
-			if zr_player.is_autobuy: # Is automatic rebuy activated
-				if not zr_player.primary: # Player doesn't have rifle
+			if player.is_autobuy: # Is automatic rebuy activated
+				if not player.primary: # Player doesn't have rifle
 					market.rebuy(userid)
-			if not zr_player.welcome_message:
+			if not layer.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
-				zr_player.welcome_message = True
-			if give_weapon == 1:
-				if zr_player.weapon_secondary:
-					if player.secondary:
-						player.secondary.remove()
-					player.give_named_item(f'weapon_{zr_player.weapon_secondary}')
-				if zr_player.weapon_rifle:
-					if player.primary:
-						player.primary.remove()
-					player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
+				player.welcome_message = True
+			if player.weapon_rifle:
+				if player.primary:
+					player.primary.remove()
+				player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
 			global _humans
 			_humans += 1
 			message.Game.send(player.index,green=green,light_green=light_green)
@@ -338,17 +329,6 @@ def un_freeze(userid):
 	player = Player.from_userid(userid)
 	player.set_stuck(False)
 	player.set_godmode(False)
-
-@Event('player_activate')
-def player_activate(args):
-	global _loaded
-	if _loaded > 0:
-		player = ZombiePlayer.from_userid(args['userid']) # Do i need this here?
-		player.joined_team              = False
-		player.welcome_message          = False
-		player.player_target            = False
-		player.weapon_rifle 		    = False
-		player.weapon_secondary 		= False
 
 @Event('player_team')
 def player_team(args):
@@ -413,9 +393,6 @@ def player_death(args):
 				for player in PlayerIter('all'):
 					player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
 					player.delay(3, cancel_overplay, (player.index,))
-			if not save_weapon == 1:
-				victim.weapon_rifle = None
-				victim.weapon_secondary = None
 
 def cancel_overplay(index):
 	player = Player(index)

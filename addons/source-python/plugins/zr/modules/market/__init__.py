@@ -105,6 +105,8 @@ def rebuy(userid):
 				message.Weapon.send(player.index, weapon=zr_player.weapon_rifle, cost=weapon_manager[zr_player.weapon_rifle].cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
 				message.Money.send(player.index, red=zr.red,green=zr.green,light_green=zr.light_green)
+		else:
+			print("Weapon wasn't found")
 	else:    
 		message.Alive.send(player.index, type="rebuy weapons", red=zr.red,green=zr.green,light_green=zr.light_green)
 
