@@ -211,6 +211,7 @@ def unload():
 	stop_loop()
 	_loaded = 0
 	_value = 0
+	admin.can_beacon = False
 	bomb_target(True)
 	hostage_rescue(True)
                 
