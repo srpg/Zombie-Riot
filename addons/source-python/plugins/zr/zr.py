@@ -284,7 +284,7 @@ def player_spawn(args):
 			if player.is_autobuy: # Is automatic rebuy activated
 				if not player.primary: # Player doesn't have rifle
 					market.rebuy(userid)
-			if not layer.welcome_message:
+			if not player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				player.welcome_message = True
 			if player.weapon_rifle:
