@@ -263,7 +263,7 @@ def player_spawn(args):
 		global _health
 		global _day
 		userid = args.get_int('userid')
-		player = ZombiePlayerPlayer(index_from_userid(userid))
+		player = ZombiePlayer(index_from_userid(userid))
 		if player.team == 2: # Is a terrorist team
 			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
