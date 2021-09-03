@@ -71,6 +71,7 @@ class ZombiePlayer(Player):
 		self.weapon_secondary 		= False
 		self.player_target          = False
 		self.is_beaconned           = False
+		self.is_autobuy             = False
 
 def strip_weapons(userid):
 	player = Player.from_userid(userid)
@@ -284,6 +285,9 @@ def player_spawn(args):
 		if player.team == 3:
 			clan_tag.deal_spawn(userid)
 			zr_player = ZombiePlayer.from_userid(args['userid'])
+			if zr_player.is_autobuy: # Is automatic rebuy activated
+				if not zr_player.primary: # Player doesn't have rifle
+					market.rebuy(userid)
 			if not zr_player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				zr_player.welcome_message = True
@@ -586,6 +590,7 @@ def info_menu(userid):
 	menu.append(Text('- Made by F1N/srpg'))
 	menu.append(Text('- Receives small bug fixes'))
 	menu.append(Text('- Has unigue support for clan tag'))
+	menu.append(Text('- Have automatic rebuy for weapons'))
 	menu.append(Text(' '))
 	menu.append(Text('About Clan Tag:'))
 	menu.append(Text('- Increases your spawn health/speed'))

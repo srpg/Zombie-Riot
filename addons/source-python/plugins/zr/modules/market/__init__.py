@@ -18,6 +18,8 @@ def weapons_menu(userid):
 	menu.append(SimpleOption(2, 'Rebuy', 'weapon_rebuy'))
 	menu.append(SimpleOption(3, 'Secondarys', 'secondary'))
 	menu.append(SimpleOption(4, 'Primarys', 'primary'))
+	if zr.isAlive(userid):
+		menu.append(SimpleOption(5, 'Activate automatic rebuy', 'rebuy_activate'))
 	menu.append(Text('-'* 25))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = main_menu_callback
@@ -47,7 +49,7 @@ def main_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
 		userid = userid_from_index(_index)
-		player = Player(index_from_userid(userid))
+		player = zr.ZombiePlayer(index_from_userid(userid))
 		if choice == 'rebuy':
 			if zr.isAlive(userid):
 				weapon = player.get_active_weapon()
@@ -73,7 +75,14 @@ def main_menu_callback(_menu, _index, _option):
 				rebuy(userid)
 			else:    
 				message.Alive.send(_index, type="rebuy weapons", red=zr.red,green=zr.green,light_green=zr.light_green)
-                
+		elif choice == 'rebuy_activate':
+			if not player.is_autobuy:
+				player.is_autobuy = True
+				SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}You have activated automatic {zr.green}rebuy').send(player.index)
+			else:
+				player.is_autobuy = False
+				SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}You have disabled automatic {zr.green}rebuy').send(player.index)
+
 def rebuy(userid):
 	if zr.isAlive(userid):
 		player = Player.from_userid(userid)
