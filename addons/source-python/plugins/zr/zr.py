@@ -287,10 +287,6 @@ def player_spawn(args):
 			if not player.welcome_message:
 				message.welcome.send(player.index, name=name, ver=version.Ver, red=red,green=green,light_green=light_green) # Welcome message
 				player.welcome_message = True
-			if player.weapon_rifle:
-				if player.primary:
-					player.primary.remove()
-				market.rebuy(userid)
 			global _humans
 			_humans += 1
 			message.Game.send(player.index,green=green,light_green=light_green)
