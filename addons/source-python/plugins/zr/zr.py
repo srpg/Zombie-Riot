@@ -290,7 +290,7 @@ def player_spawn(args):
 			if player.weapon_rifle:
 				if player.primary:
 					player.primary.remove()
-				player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
+				market.rebuy(userid)
 			global _humans
 			_humans += 1
 			message.Game.send(player.index,green=green,light_green=light_green)
