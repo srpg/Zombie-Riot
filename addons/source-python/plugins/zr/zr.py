@@ -314,7 +314,7 @@ def round_start(args):
 			echo_console('[Zombie Riot] Current Zombies Health: %s' % (_health))
 		echo_console('[Zombie Riot] Current Humans: %s' % (_humans))
 		echo_console('***********************************************************')
-		for player in PlayerIter():
+		for player in PlayerIter('all'):
 			player.client_command('r_screenoverlay 0')
 
 @Event('round_freeze_end')
