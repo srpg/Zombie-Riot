@@ -314,6 +314,8 @@ def round_start(args):
 			echo_console('[Zombie Riot] Current Zombies Health: %s' % (_health))
 		echo_console('[Zombie Riot] Current Humans: %s' % (_humans))
 		echo_console('***********************************************************')
+		for player in PlayerIter():
+			player.client_command('r_screenoverlay 0')
 
 @Event('round_freeze_end')
 def round_freeze_end(args):
@@ -381,7 +383,6 @@ def player_death(args):
 					player.client_command('kill', True) # Makes sure bots doesn't stay alive
 				for player in PlayerIter('all'):
 					player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
-					player.delay(3, cancel_overplay, (player.index,))
 		elif victim.team == 3: 
 			_humans -= 1
 			if _humans > 0:
@@ -389,11 +390,6 @@ def player_death(args):
 			if _humans == 0:
 				for player in PlayerIter('all'):
 					player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
-					player.delay(3, cancel_overplay, (player.index,))
-
-def cancel_overplay(index):
-	player = Player(index)
-	player.client_command('r_screenoverlay 0')
 
 def won():
 	global _day
