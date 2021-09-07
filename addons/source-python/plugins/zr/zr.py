@@ -227,22 +227,22 @@ def get_days(value):
 
 def get_health(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return int(_CONFIG[val]['health'])
     
 def get_model(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return _CONFIG[val]['Model']
  
 def get_speed(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return float(_CONFIG[val]['speed'])
 
 def get_boss(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return int(_CONFIG['boss']['value'])
 
 def boss_zombies(value):
