@@ -242,8 +242,8 @@ def get_speed(value):
 
 def get_boss(value):
 	val = '%s' % (value)
-	if val in int(_CONFIG['boss'])
-		return int(_CONFIG['boss'])
+	if not val >= max_day():
+		return int(_CONFIG['boss']['value'])
 
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
