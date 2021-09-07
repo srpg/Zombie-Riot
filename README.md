@@ -6,7 +6,7 @@ In order to win a day, you need to kill all zombies.
 
 This plugin requires <a href="https://forums.sourcepython.com/">Source.Python</a> to load.
 
-This plugin only supports Counter-Strike-Source
+This plugin only supports Counter-Strike-Source(Possible other games, but not csgo)
 
 Load Command: sp plugin load zr
 
@@ -40,15 +40,20 @@ Github: https://github.com/srpg/Zombie-Riot/issues
 2. Add inside of css.txt file materials/models file path
 
 For example like:
-
   models/player/zh/zh_zombie003.dx80.vtx
-
   models/player/zh/zh_zombie003.dx90.vtx
-
   models/player/zh/zh_zombie003.mdl
-
   models/player/zh/zh_zombie003.phy
-
   models/player/zh/zh_zombie003.sw.vtx
-
   models/player/zh/zh_zombie003.vvd
+
+# How to add boss day
+1. Go inside of _settings.ini file
+2. Go to [boss] section
+3. Modify value to the day you want as boss day
+4. Modify zombies value to how many zombies should be
+
+Example:
+[boss]
+	value = 1 # The day of the boss day
+	zombies = 2 # The amount of the zombies
