@@ -18,8 +18,9 @@ def weapons_menu(userid):
 	menu.append(SimpleOption(2, 'Rebuy', 'weapon_rebuy'))
 	menu.append(SimpleOption(3, 'Secondarys', 'secondary'))
 	menu.append(SimpleOption(4, 'Primarys', 'primary'))
+	menu.append(SimpleOption(5, 'Grenades', 'grenade'))
 	if zr.isAlive(userid):
-		menu.append(SimpleOption(5, 'Activate automatic rebuy', 'rebuy_activate'))
+		menu.append(SimpleOption(6, 'Activate automatic rebuy', 'rebuy_activate'))
 	menu.append(Text('-'* 25))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = main_menu_callback
@@ -44,7 +45,17 @@ def primary_weapons_menu(userid):
 		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, player.cash >= weapon.cost and zr.isAlive(userid), player.cash >= weapon.cost and zr.isAlive(userid)))
 	menu.select_callback = primary_menu_callback
 	menu.send(index_from_userid(userid))
-  
+
+def grenades_menu(userid):
+	menu = PagedMenu(title='Grenades\n')
+	if zr.is_queued(menu, index_from_userid(userid)):
+		return
+	player = Player.from_userid(userid)
+	for weapon in WeaponClassIter(is_filters='grenade'):
+		menu.append(PagedOption('%s: %s$' % (weapon.basename.title(), weapon.cost), weapon, player.cash >= weapon.cost and zr.isAlive(userid), player.cash >= weapon.cost and zr.isAlive(userid)))
+	menu.select_callback = grenade_menu_callback
+	menu.send(index_from_userid(userid))
+
 def main_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
@@ -68,6 +79,8 @@ def main_menu_callback(_menu, _index, _option):
 				message.Alive.send(_index, type="rebuy bullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'secondary':
 			secondary_weapons_menu(userid)
+		elif choice == 'grenade':
+			grenades_menu(userid)
 		elif choice == 'primary':
 			primary_weapons_menu(userid)
 		elif choice == 'weapon_rebuy':
@@ -91,7 +104,7 @@ def rebuy(userid):
 			if player.cash >= weapon_manager[zr_player.weapon_secondary].cost:
 				if player.secondary:
 					player.secondary.remove()
-				player.give_named_item('weapon_%s' % zr_player.weapon_secondary)
+				player.give_named_item(f'weapon_{zr_player.weapon_secondary}')
 				player.cash -= weapon_manager[zr_player.weapon_secondary].cost
 				message.Weapon.send(player.index, weapon=zr_player.weapon_secondary, cost=weapon_manager[zr_player.weapon_secondary].cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
@@ -100,7 +113,7 @@ def rebuy(userid):
 			if player.cash >= weapon_manager[zr_player.weapon_rifle].cost:
 				if player.primary:
 					player.primary.remove()
-				player.give_named_item('weapon_%s' % zr_player.weapon_rifle)
+				player.give_named_item(f'weapon_{zr_player.weapon_rifle}')
 				player.cash -= weapon_manager[zr_player.weapon_rifle].cost
 				message.Weapon.send(player.index, weapon=zr_player.weapon_rifle, cost=weapon_manager[zr_player.weapon_rifle].cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 			else:
@@ -121,7 +134,7 @@ def secondary_menu_callback(_menu, _index, _option):
 				secondary = player.secondary
 				if secondary:
 					secondary.remove()
-				player.give_named_item('%s' % (choice.name))
+				player.give_named_item(f'{choice.name}')
 				message.Weapon.send(_index, weapon=choice.basename.upper(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 				zr_player = zr.ZombiePlayer.from_userid(userid)
 				zr_player.weapon_secondary = choice.basename
@@ -129,8 +142,24 @@ def secondary_menu_callback(_menu, _index, _option):
 			else:
 				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 		else:
-			message.Alive.send(_index, type=choice.basename.upper(), green=zr.green,light_green=zr.light_green)
-            
+			message.Alive.send(_index, type=choice.basename.title(), green=zr.green,light_green=zr.light_green)
+
+def grenade_menu_callback(_menu, _index, _option):
+	choice = _option.value
+	if choice:
+		userid = userid_from_index(_index)
+		if zr.isAlive(userid):
+			player = Player(index_from_userid(userid))
+			if player.cash >= choice.cost:
+				player.cash -= choice.cost
+				player.give_named_item(f'{choice.name}')
+				message.Weapon.send(_index, weapon=choice.basename.title(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
+				weapons_menu(userid)
+			else:
+				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
+		else:
+			message.Alive.send(_index, type=choice.basename.title(), green=zr.green,light_green=zr.light_green)
+
 def primary_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
@@ -142,12 +171,12 @@ def primary_menu_callback(_menu, _index, _option):
 				primary = player.primary
 				if primary:
 					primary.remove()
-				player.give_named_item('%s' % (choice.name))
-				message.Weapon.send(_index, weapon=choice.basename.upper(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
+				player.give_named_item(f'{choice.name}')
+				message.Weapon.send(_index, weapon=choice.basename.title(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
 				zr_player = zr.ZombiePlayer.from_userid(userid)
 				zr_player.weapon_rifle = choice.basename
 				weapons_menu(userid)
 			else:
 				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 		else:
-			message.Alive.send(_index, type=choice.basename.upper(), green=zr.green,light_green=zr.light_green)
+			message.Alive.send(_index, type=choice.basename.title(), green=zr.green,light_green=zr.light_green)
