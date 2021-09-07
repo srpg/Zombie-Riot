@@ -240,6 +240,11 @@ def get_speed(value):
 	if not int(val) > max_day():
 		return float(_CONFIG[val]['speed'])
 
+def get_boss(value):
+	val = '%s' % (value)
+	if val in int(_CONFIG['boss'])
+		return int(_CONFIG['boss'])
+
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
 	dl = Downloadables()
@@ -316,6 +321,11 @@ def round_start(args):
 		echo_console('***********************************************************')
 		for player in PlayerIter('all'):
 			player.client_command('r_screenoverlay 0')
+		boss_day = get_boss(_day)
+		if boss_day in _day:
+			queue_command_string('bot_quota 1')
+		else:
+			queue_command_string('bot_quota 20')
 
 @Event('round_freeze_end')
 def round_freeze_end(args):
