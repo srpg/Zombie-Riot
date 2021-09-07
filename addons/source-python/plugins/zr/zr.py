@@ -227,23 +227,28 @@ def get_days(value):
 
 def get_health(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
+	if not int(val) >= max_day():
 		return int(_CONFIG[val]['health'])
     
 def get_model(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
+	if not int(val) >= max_day():
 		return _CONFIG[val]['Model']
  
 def get_speed(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
+	if not int(val) >= max_day():
 		return float(_CONFIG[val]['speed'])
 
 def get_boss(value):
 	val = '%s' % (value)
 	if not int(val) >= max_day():
 		return int(_CONFIG['boss']['value'])
+
+def boss_zombies(value):
+	val = '%s' % (value)
+	if not int(val) >= max_day():
+		return int(_CONFIG['boss']['zombies'])
 
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
@@ -310,7 +315,7 @@ def round_start(args):
 		if not get_boss(_day) == int(_day):
 			_value = get_days(_day)
 		else:
-			_value = 1 # Todo make a file to get value for amount
+			_value = boss_zombies(_day)
 		if server_name:
 			queue_command_string('hostname "Zombie Riot Day: [%s/%s]"' % (_day, max_day()))
 		_humans = real_count()
@@ -328,7 +333,7 @@ def round_start(args):
 		if boss_day == int(_day):
 			queue_command_string('bot_quota 1')
 		else:
-			queue_command_string('bot_quota 20')
+			queue_command_string(f'bot_quota {boss_zombies(_day)}')
 
 @Event('round_freeze_end')
 def round_freeze_end(args):
