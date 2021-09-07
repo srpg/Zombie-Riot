@@ -322,7 +322,7 @@ def round_start(args):
 		for player in PlayerIter('all'):
 			player.client_command('r_screenoverlay 0')
 		boss_day = get_boss(_day)
-		if boss_day in _day:
+		if boss_day == int(_day):
 			queue_command_string('bot_quota 1')
 		else:
 			queue_command_string('bot_quota 20')
