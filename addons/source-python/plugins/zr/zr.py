@@ -307,7 +307,7 @@ def round_start(args):
 		global _humans
 		_health = get_health(_day)
 		global _value
-		if not get_boss(_day) == int(day):
+		if not get_boss(_day) == int(_day):
 			_value = get_days(_day)
 		else:
 			_value = 1 # Todo make a file to get value for amount
