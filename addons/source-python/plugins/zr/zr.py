@@ -307,7 +307,10 @@ def round_start(args):
 		global _humans
 		_health = get_health(_day)
 		global _value
-		_value = get_days(_day)
+		if not get_boss(_day) == int(day):
+			_value = get_days(_day)
+		else:
+			_value = 1 # Todo make a file to get value for amount
 		if server_name:
 			queue_command_string('hostname "Zombie Riot Day: [%s/%s]"' % (_day, max_day()))
 		_humans = real_count()
