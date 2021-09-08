@@ -247,7 +247,7 @@ def get_boss(value):
 
 def boss_zombies(value):
 	val = '%s' % (value)
-	if not int(val) >= max_day():
+	if not int(val) > max_day():
 		return int(_CONFIG['boss']['zombies'])
 
 def set_download():
