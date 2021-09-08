@@ -331,7 +331,7 @@ def round_start(args):
 			player.client_command('r_screenoverlay 0')
 		boss_day = get_boss(_day)
 		if boss_day == int(_day):
-			if boss_day(_day) < 21
+			if boss_day(_day) < 21:
 				queue_command_string(f'bot_quota {boss_zombies(_day)}')
 			else:
 				queue_command_string('bot_quota 20')
