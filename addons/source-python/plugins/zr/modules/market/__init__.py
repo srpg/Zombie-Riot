@@ -97,9 +97,9 @@ def main_menu_callback(_menu, _index, _option):
 				SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}You have disabled automatic {zr.green}rebuy').send(player.index)
 
 def rebuy(userid):
+	player = Player.from_userid(userid)
+	zr_player = zr.ZombiePlayer.from_userid(userid)
 	if zr.isAlive(userid):
-		player = Player.from_userid(userid)
-		zr_player = zr.ZombiePlayer.from_userid(userid)
 		if zr_player.weapon_secondary:
 			if player.cash >= weapon_manager[zr_player.weapon_secondary].cost:
 				if player.secondary:
