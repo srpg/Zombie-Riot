@@ -1,4 +1,5 @@
 import os, path, random
+from engines.server import engine_server
 from core import GAME_NAME, echo_console
 from entities.entity import Entity
 from events import Event
@@ -422,13 +423,27 @@ def winner():
 	message.Won.send(red=red,green=green,light_green=light_green)
 	mapDir = os.listdir("%s/maps" % GAME_NAME)
 	next_map = random.choice(mapDir).replace('.bsp', '', 1).replace('.nav', '', 1)
-	SayText2(f'{green}[Zombie Riot] » {light_green} Map will be changed to {green}{next_map}').send()
-	Delay(11, change_map, (next_map,))
-	Delay(10, tell, (1,))
-	Delay(9, tell, (2,))
-	Delay(8, tell, (3,))
-	Delay(1, tell, (10,))
+	if not engine_server.is_map_valid(next_map):
+		Delay(0.1, new_try)
+	else:
+		SayText2(f'{green}[Zombie Riot] » {light_green} Map will be changed to {green}{next_map}').send()
+		Delay(11, change_map, (next_map,))
+		Delay(10, tell, (1,))
+		Delay(9, tell, (2,))
+		Delay(8, tell, (3,))
+		Delay(1, tell, (10,))
 	_day = 1
+
+def new_try():
+	mapDir = os.listdir("%s/maps" % GAME_NAME)
+	next_map = random.choice(mapDir).replace('.bsp', '', 1).replace('.nav', '', 1)
+	if engine_server.is_map_valid(next_map):
+		SayText2(f'{green}[Zombie Riot] » {light_green} Map will be changed to {green}{next_map}').send()
+		Delay(11, change_map, (next_map,))
+		Delay(10, tell, (1,))
+		Delay(9, tell, (2,))
+		Delay(8, tell, (3,))
+		Delay(1, tell, (10,))
 
 def change_map(next_map):
 	queue_command_string(f'changelevel {next_map}')
