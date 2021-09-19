@@ -19,9 +19,11 @@ Currently have 11Days as max, but you can easyly add more.
 4. After added [12] make press enter
 5. After you pressed enter add amount = 150 and press enter again
 6. After you pressed enter add health = 600 and press enter again
-7. After you pressed enter add Model = 'models/player/zh/zh_corpse002.mdl'
-8. After you pressed enter add speed = 1.30
-9. After those change in [Days] value = 12
+7. After you pressed enter add Model = 'models/player/zh/zh_corpse002.mdl' and press enter again
+8. After you pressed enter add speed = 1.30 and press enter again
+9. After you pressed enter add dmg = 2 and press enter again
+10. After those change in [Days] value = 12
+11. Save _settings.ini file after those changes and reload plugin to apply the changes
 
 # How to add admin
 1. Go to addons/source-python/plugins/zr/modules/admin/ and you find inside of the folder _admins.ini file
