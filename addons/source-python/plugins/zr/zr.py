@@ -4,7 +4,7 @@ from core import GAME_NAME, echo_console
 from entities.entity import Entity
 from events import Event
 from events.hooks import PreEvent, EventAction
-from players.helpers import index_from_userid, userid_from_index
+from players.helpers import index_from_userid, userid_from_index, userid_from_inthandle
 from players.entity import Player
 from filters.players import PlayerIter
 from filters.entities import EntityIter
@@ -19,11 +19,12 @@ from filters.weapons import WeaponClassIter, WeaponIter
 from weapons.manager import weapon_manager
 from messages import TextMsg, HintText, SayText2
 from stringtables.downloads import Downloadables
-from colors import Color
-from colors import GREEN, LIGHT_GREEN, RED
+from colors import Color, GREEN, LIGHT_GREEN, RED
 from menus import Text, SimpleMenu, PagedMenu, SimpleOption
 from entities.hooks import EntityPreHook, EntityCondition
 from entities.helpers import index_from_pointer
+from entities import TakeDamageInfo
+from memory import make_object
 from listeners import OnLevelShutdown
 from zr.modules import admin
 from zr.modules import market 
@@ -143,6 +144,23 @@ def pre_buy(args):
 	except KeyError:
 		return
 
+@EntityPreHook(EntityCondition.is_human_player, 'on_take_damage')
+@EntityPreHook(EntityCondition.is_bot_player, 'on_take_damage')
+def pre_on_take_damage(args):
+	global _day
+	if not _day == get_boss(_day):
+		info = make_object(TakeDamageInfo, args[1])
+		index = index_from_pointer(args[0])
+		if info.attacker == info.inflictor:
+			if info.type & 2:
+				_damage = info.damage
+				userid = userid_from_index(index)
+				attacker = userid_from_inthandle(info.attacker)
+				hurter = Player.from_userid(attacker)
+				if hurter.is_bot():
+					_damage += (_damage / 100.0) * zombies_dmg(_day)
+				info.damage = _damage
+
 @PreEvent('server_cvar', 'player_team', 'player_disconnect', 'player_connect_client')
 def pre_events(game_event):
 	global _loaded
@@ -250,6 +268,11 @@ def boss_zombies(value):
 	val = '%s' % (value)
 	if not int(val) > max_day():
 		return int(_CONFIG['boss']['zombies'])
+
+def zombies_dmg(value):
+	val = '%s' % (value)
+	if not int(val) > max_day():
+		return float(_CONFIG[val]['dmg'])
 
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
