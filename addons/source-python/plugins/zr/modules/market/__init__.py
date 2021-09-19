@@ -154,6 +154,7 @@ def grenade_menu_callback(_menu, _index, _option):
 
 def check_grenades(userid, choice):
 	player = Player.from_userid(userid)
+	_index = player.index
 	if choice.basename == 'hegrenade':
 		if not player.get_property_int('localdata.m_iAmmo.011'):
 			if player.cash >= choice.cost:
