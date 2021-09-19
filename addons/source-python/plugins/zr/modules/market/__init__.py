@@ -150,6 +150,34 @@ def grenade_menu_callback(_menu, _index, _option):
 		userid = userid_from_index(_index)
 		if zr.isAlive(userid):
 			player = Player(index_from_userid(userid))
+			check_grenades(userid, choice)
+
+def check_grenades(userid, choice):
+	player = Player.from_userid(userid)
+	if choice.basename == 'hegrenade':
+		if not player.get_property_int('localdata.m_iAmmo.011'):
+			if player.cash >= choice.cost:
+				player.cash -= choice.cost
+				player.give_named_item(f'{choice.name}')
+				message.Weapon.send(player.index, weapon=choice.basename.title(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
+				weapons_menu(userid)
+			else:
+				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
+		else:
+			SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}You cannot buy {zr.green}hegrenade {zr.light_green}you already have {zr.green}hegrenade!').send(player.index)
+	if choice.basename == 'smokegrenade':
+		if not player.get_property_int('localdata.m_iAmmo.013'):
+			if player.cash >= choice.cost:
+				player.cash -= choice.cost
+				player.give_named_item(f'{choice.name}')
+				message.Weapon.send(player.index, weapon=choice.basename.title(), cost=choice.cost, red=zr.red,green=zr.green,light_green=zr.light_green)
+				weapons_menu(userid)
+			else:
+				message.Money.send(player.index, red=zr.red,green=zr.green,light_green=zr.light_green)
+		else:
+			SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}You cannot buy {zr.green}smokegrenade {zr.light_green}you already have {zr.green}smokegrenade!').send(player.index)
+	if choice.basename == 'flashbang':
+		if not player.get_property_int('localdata.m_iAmmo.012'):
 			if player.cash >= choice.cost:
 				player.cash -= choice.cost
 				player.give_named_item(f'{choice.name}')
@@ -158,7 +186,7 @@ def grenade_menu_callback(_menu, _index, _option):
 			else:
 				message.Money.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 		else:
-			message.Alive.send(_index, type=choice.basename.title(), green=zr.green,light_green=zr.light_green)
+			SayText2(f'{zr.green}[Zombie Riot] » {zr.light_green}You cannot buy {zr.green}flashbang {zr.light_green}you already have {zr.green}flashbang!').send(player.index)
 
 def primary_menu_callback(_menu, _index, _option):
 	choice = _option.value
