@@ -9,7 +9,7 @@ from commands.server import ServerCommand
 from engines.server import queue_command_string
 from zr import zr
 
-Ver = '1.9.5'
+Ver = '1.9.6'
 new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
