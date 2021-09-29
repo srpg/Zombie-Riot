@@ -522,7 +522,7 @@ def build_hudmessage(userid):
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
 	__msg__ += '\nZombies: %s' % (_value) # Add name for each day
 	__msg__ += '\nHumans: %s' % (_humans)
-	__msg__ += '\nZombies Damage: % xs' % (zombies_dmg(_day))
+	__msg__ += '\nZombies Damage: % s' % (zombies_dmg(_day))
 	__msg__ += '\nZombies Speed: %s x' % (get_speed(_day))
 	if not player.player_target == False:
 		try:
