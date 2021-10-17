@@ -98,6 +98,9 @@ def rifles():
 def alive():
 	return len(PlayerIter(['ct', 'alive']))
 
+def all_zombies():
+	return len(PlayerIter(['t', 'all']))
+
 def alive_zombies():
 	return len(PlayerIter(['t', 'alive']))
     
