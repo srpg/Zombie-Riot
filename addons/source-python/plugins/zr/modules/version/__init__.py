@@ -13,7 +13,7 @@ Ver = '1.9.8'
 new_version = ('https://cssbestrpg.online/version.txt')
 UPDATE_PATH = GAME_PATH
 
-is_online = False
+is_online = True
 
 def version_checker(timeout=3):
 	global is_online
