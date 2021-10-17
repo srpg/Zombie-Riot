@@ -39,6 +39,9 @@ download = os.path.join(__FILEPATH__ + '/css.txt')
 
 weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 
+_cankill = True
+_show_hudhint = True
+
 #=====================
 # Config
 #=====================
@@ -329,6 +332,10 @@ def player_spawn(args):
 
 @Event('round_start')
 def round_start(args):
+	global _show_hudhint
+	global _cankill
+	_show_hudhint = True
+	_cankill = True
 	global _loaded
 	if _loaded > 0:
 		queue_command_string('mp_roundtime 9')
@@ -358,6 +365,13 @@ def round_start(args):
 			queue_command_string(f'bot_quota {boss_zombies(_day)}')
 		else:
 			queue_command_string('bot_quota 20')
+
+@Event('round_end')
+def round_end(args):
+	global _show_hudhint
+	global _cankill
+	_show_hudhint = False
+	_cankill = False
 
 @Event('round_freeze_end')
 def round_freeze_end(args):
@@ -405,24 +419,24 @@ def player_death(args):
 		global _humans
 		global _value
 		global _day
+		global _cankill
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
 		if attacker > 0:
 			clan_tag.deal_death(attacker)
 		victim = ZombiePlayer.from_userid(userid)
 		if victim.team == 2:
-			victim.is_beaconned = False
+			victim.is_beaconed = False
 			_value -= 1
 			if not _value == alive_zombies(): # Works better than if _value > 19
-				if _humans > 0:
+				check_value()
+				if _humans > 0 and _cankill:
 					victim.delay(0.1, respawn, (userid,))
 			if _value < beacon_value:
 				for player in PlayerIter('bot'):
 					admin.beacon(player.userid)
 			if _value == 0:
 				Delay(0.1, won)
-				for player in PlayerIter('bot'):
-					player.client_command('kill', True) # Makes sure bots doesn't stay alive
 				for player in PlayerIter('all'):
 					player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
 		elif victim.team == 3: 
@@ -467,6 +481,72 @@ def new_try():
 		Delay(9, tell, (2,))
 		Delay(8, tell, (3,))
 		Delay(1, tell, (10,))
+	else:
+		Delay(1, new_try)
+
+def check_value(): # Todo find cleaner way for fix
+	global _cankill
+	global _value
+	if all_zombies() > 20:
+		if _value == 20:
+			_cankill = False
+	if all_zombies() == 20:
+		if _value == 19:
+			_cankill = False
+	if all_zombies() == 19:
+		if _value == 18:
+			_cankill = False
+	if all_zombies() == 18:
+		if _value == 17:
+			_cankill = False
+	if all_zombies() == 17:
+		if _value == 16:
+			_cankill = False
+	if all_zombies() == 16:
+		if _value == 15:
+			_cankill = False
+	if all_zombies() == 15:
+		if _value == 14:
+			_cankill = False
+	if all_zombies() == 14:
+		if _value == 13:
+			_cankill = False
+	if all_zombies() == 13:
+		if _value == 12:
+			_cankill = False
+	if all_zombies() == 12:
+		if _value == 11:
+			_cankill = False
+	if all_zombies() == 10:
+		if _value == 9:
+			_cankill = False
+	if all_zombies() == 9:
+		if _value == 8:
+			_cankill = False
+	if all_zombies() == 8:
+		if _value == 7:
+			_cankill = False
+	if all_zombies() == 7:
+		if _value == 6:
+			_cankill = False
+	if all_zombies() == 6:
+		if _value == 5:
+			_cankill = False
+	if all_zombies() == 5:
+		if _value == 4:
+			_cankill = False
+	if all_zombies() == 4:
+		if _value == 3:
+			_cankill = False
+	if all_zombies() == 3:
+		if _value == 2:
+			_cankill = False
+	if all_zombies() == 2:
+		if _value == 1:
+			_cankill = False
+	if all_zombies() == 1:
+		if _value == 0:
+			_cankill = False
 
 def change_map(next_map):
 	queue_command_string(f'changelevel {next_map}')
@@ -508,11 +588,13 @@ def stop_loop():
 def info():
 	init_loop()
 	global _day
+	global _show_hudhint
 	for i in getUseridList():
 		if info_panel:
-			if not Player.from_userid(i).is_bot():
-				if not _day > max_day():
-					hudhint(i, build_hudmessage(i))
+			if _show_hudhint:
+				if not Player.from_userid(i).is_bot():
+					if not _day > max_day():
+						hudhint(i, build_hudmessage(i))
 
 
 def build_hudmessage(userid):
