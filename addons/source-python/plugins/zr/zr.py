@@ -430,7 +430,7 @@ def player_death(args):
 			clan_tag.deal_death(attacker)
 		victim = ZombiePlayer.from_userid(userid)
 		if victim.team == 2:
-			victim.is_beaconed = False
+			victim.is_beaconned = False
 			_value -= 1
 			if not _value == alive_zombies(): # Works better than if _value > 19
 				check_value()
