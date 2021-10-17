@@ -360,6 +360,7 @@ def round_start(args):
 		echo_console('***********************************************************')
 		for player in PlayerIter('all'):
 			player.client_command('r_screenoverlay 0')
+			ZombiePlayer.from_userid(player.userid).player_target = False
 		boss_day = get_boss(_day)
 		if boss_day == int(_day):
 			queue_command_string(f'bot_quota {boss_zombies(_day)}')
