@@ -11,9 +11,8 @@ from filters.entities import EntityIter
 from engines.precache import Model
 from engines.server import queue_command_string
 from listeners.tick import Delay
-from commands.say import SayFilter
+from commands.say import SayCommand
 from commands.server import ServerCommand
-from commands.client import ClientCommandFilter
 from configobj import ConfigObj
 from filters.weapons import WeaponClassIter, WeaponIter
 from weapons.manager import weapon_manager
@@ -173,19 +172,13 @@ def pre_events(game_event):
 	if _loaded > 0:
 		return EventAction.STOP_BROADCAST
 
-@SayFilter
-def sayfilter(command, index, teamonly):
+@SayCommand('market')
+def market_command(command, index, teamonly):
 	global _loaded
 	if _loaded > 0:
-		userid = None
-		if index:
-			userid = userid_from_index(index)
-			if userid and command:
-				text = command[0].replace('!', '', 1).replace('/', '', 1).lower()
-				args = command.arg_string
-				if text == 'market':
-					main_menu(userid)
-					return False
+		userid = userid_from_index(index)
+		main_menu(userid)
+	return False
 
 @ServerCommand('zombie_version') # Move this to version module?
 def zombie_version(command):
@@ -593,20 +586,18 @@ def info():
 	init_loop()
 	global _day
 	global _show_hudhint
-	for i in getUseridList():
+	for player in PlayerIter('human'):
 		if info_panel:
 			if _show_hudhint:
-				if not Player.from_userid(i).is_bot():
-					if not _day > max_day():
-						hudhint(i, build_hudmessage(i))
-
+				if not _day > max_day():
+					hudhint(player.userid, build_hudmessage(player.userid))
 
 def build_hudmessage(userid):
 	global _value
 	global _day 
 	player = ZombiePlayer.from_userid(userid)
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
-	__msg__ += '\nZombies: %s' % (_value) # Add name for each day
+	__msg__ += '\nZombies: %s' % (_value) # Todo Add name for each day
 	__msg__ += '\nHumans: %s' % (_humans)
 	__msg__ += '\nZombies Damage: % s' % (zombies_dmg(_day))
 	__msg__ += '\nZombies Speed: %s x' % (get_speed(_day))
@@ -619,7 +610,6 @@ def build_hudmessage(userid):
 				player.player_target = False
 		except:
 			player.player_target = False
-			pass
 
 	return __msg__
 

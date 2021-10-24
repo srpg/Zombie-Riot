@@ -39,7 +39,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 12000
 					message.Potion.send(_index, type="full health", cost=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'half_health':
@@ -50,7 +50,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 6000
 					message.Potion.send(_index, type="half health", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_health':
@@ -61,7 +61,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 3000
 					message.Potion.send(_index, type="25% health", cost=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="health potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_bullets':
@@ -76,7 +76,7 @@ def potion_menu_callback(_menu, _index, _option):
 					else:
 						message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="fullbullets", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == '25_speed':
@@ -87,7 +87,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 3000
 					message.Potion.send(_index, type="25% speed", cost=3000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'half_speed':
@@ -98,7 +98,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 6000
 					message.Potion.send(_index, type="half speed", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'full_speed':
@@ -108,7 +108,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 12000
 					message.Potion.send(_index, type="full speed", cost=12000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="speed potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'infi_bullets':
@@ -123,7 +123,7 @@ def potion_menu_callback(_menu, _index, _option):
 					else:
 						message.Invalid.send(_index, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Alive.send(_index, type="infinity bullets potion", red=zr.red,green=zr.green,light_green=zr.light_green)
 		elif choice == 'respawn':
@@ -133,7 +133,7 @@ def potion_menu_callback(_menu, _index, _option):
 					player.cash -= 6000
 					message.Potion.send(_index, type="respawn", cost=6000, red=zr.red,green=zr.green,light_green=zr.light_green)
 				else:
-					pass # Todo add a message you don't enough cash
+					pass # Todo add a message when don't have enough cash
 			else:
 				message.Dead.send(_index, green=zr.green,light_green=zr.light_green)
 
