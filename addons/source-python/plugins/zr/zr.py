@@ -486,7 +486,7 @@ def check_value():
 	global _value
 	calculated = all_zombies() - 1 # Calculate from normal amount of zombies and reduce by one
 	if calculated > all_zombies(): # Calculated zombies have less than zombies
-		w_cankill = False # Block respawn
+		_cankill = False # Block respawn
 
 def change_map(next_map):
 	queue_command_string(f'changelevel {next_map}')
