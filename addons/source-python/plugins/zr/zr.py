@@ -214,14 +214,14 @@ def load():
 			echo_console(f'[Zombie Riot] Clan Tag: {clan}')
 			init_loop()
 			echo_console('[Zombie Riot] Author: F1N/srpg')
-			echo_console('[Zombie Riot] Version: Beta')
-			echo_console('[Zombie Riot] Loaded Completely')
+			echo_console(f'[Zombie Riot] Version: {version.Ver}')
+			echo_console('[Zombie Riot] Loading Finished')
 			queue_command_string('mp_restartgame 1')
 			bomb_target(False)
 			hostage_rescue(False)
 			echo_console('***********************************************************')
 	else:
-		raise NotImplementedError('[Zombie Riot] This plugin doesn\'t support csgo!') 
+		raise NotImplementedError(f '[Zombie Riot] This plugin doesn\'t support {GAME_NAME}!') 
 
 def unload():
 	global _loaded
@@ -426,7 +426,7 @@ def player_death(args):
 			victim.is_beaconned = False
 			_value -= 1
 			if not _value == alive_zombies(): # Works better than if _value > 19
-				check_value()
+				check_value() # Call checker to ensure not getting invalid respawns
 				if _humans > 0 and _cankill:
 					victim.delay(0.1, respawn, (userid,))
 			if _value < beacon_value:
@@ -474,76 +474,19 @@ def new_try():
 	if engine_server.is_map_valid(next_map):
 		SayText2(f'{green}[Zombie Riot] » {light_green} Map will be changed to {green}{next_map}').send()
 		Delay(11, change_map, (next_map,))
-		Delay(10, tell, (1,))
+		Delay(10, tell, (1,)) # Move to hudhint?
 		Delay(9, tell, (2,))
 		Delay(8, tell, (3,))
 		Delay(1, tell, (10,))
 	else:
 		Delay(1, new_try)
 
-def check_value(): # Todo find cleaner way for fix
+def check_value():
 	global _cankill
 	global _value
-	if all_zombies() > 20:
-		if _value == 20:
-			_cankill = False
-	if all_zombies() == 20:
-		if _value == 19:
-			_cankill = False
-	if all_zombies() == 19:
-		if _value == 18:
-			_cankill = False
-	if all_zombies() == 18:
-		if _value == 17:
-			_cankill = False
-	if all_zombies() == 17:
-		if _value == 16:
-			_cankill = False
-	if all_zombies() == 16:
-		if _value == 15:
-			_cankill = False
-	if all_zombies() == 15:
-		if _value == 14:
-			_cankill = False
-	if all_zombies() == 14:
-		if _value == 13:
-			_cankill = False
-	if all_zombies() == 13:
-		if _value == 12:
-			_cankill = False
-	if all_zombies() == 12:
-		if _value == 11:
-			_cankill = False
-	if all_zombies() == 10:
-		if _value == 9:
-			_cankill = False
-	if all_zombies() == 9:
-		if _value == 8:
-			_cankill = False
-	if all_zombies() == 8:
-		if _value == 7:
-			_cankill = False
-	if all_zombies() == 7:
-		if _value == 6:
-			_cankill = False
-	if all_zombies() == 6:
-		if _value == 5:
-			_cankill = False
-	if all_zombies() == 5:
-		if _value == 4:
-			_cankill = False
-	if all_zombies() == 4:
-		if _value == 3:
-			_cankill = False
-	if all_zombies() == 3:
-		if _value == 2:
-			_cankill = False
-	if all_zombies() == 2:
-		if _value == 1:
-			_cankill = False
-	if all_zombies() == 1:
-		if _value == 0:
-			_cankill = False
+	calculated = all_zombies() - 1 # Calculate from normal amount of zombies and reduce by one
+	if calculated > all_zombies(): # Calculated zombies have less than zombies
+		w_cankill = False # Block respawn
 
 def change_map(next_map):
 	queue_command_string(f'changelevel {next_map}')
@@ -597,9 +540,9 @@ def build_hudmessage(userid):
 	global _day 
 	player = ZombiePlayer.from_userid(userid)
 	__msg__ = 'Day: %s/%s' % (_day, max_day())
-	__msg__ += '\nZombies: %s' % (_value) # Todo Add name for each day
 	__msg__ += '\nHumans: %s' % (_humans)
-	__msg__ += '\nZombies Damage: % s' % (zombies_dmg(_day))
+	__msg__ += '\nZombies: %s' % (_value) # Todo Add name for each day
+	__msg__ += '\nZombies Damage: %s' % (zombies_dmg(_day))
 	__msg__ += '\nZombies Speed: %s x' % (get_speed(_day))
 	if not player.player_target == False:
 		try:
@@ -696,7 +639,7 @@ def info_menu(userid):
 	menu.append(Text('- Has unigue support for clan tag'))
 	menu.append(Text('- Have automatic rebuy for weapons'))
 	menu.append(Text(' '))
-	menu.append(Text('About Clan Tag:'))
+	menu.append(Text(f'About Clan Tag: {clan}'))
 	menu.append(Text('- Increases your spawn health/speed'))
 	menu.append(Text('- Lowers your gravity'))
 	menu.append(Text('- Increases Health/Speed per kill'))
