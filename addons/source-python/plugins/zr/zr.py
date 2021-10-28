@@ -221,7 +221,7 @@ def load():
 			hostage_rescue(False)
 			echo_console('***********************************************************')
 	else:
-		raise NotImplementedError(f '[Zombie Riot] This plugin doesn\'t support {GAME_NAME}!') 
+		raise NotImplementedError(f'[Zombie Riot] This plugin doesn\'t support {GAME_NAME}!') 
 
 def unload():
 	global _loaded
@@ -484,9 +484,9 @@ def new_try():
 def check_value():
 	global _cankill
 	global _value
-	calculated = all_zombies() - 1 # Calculate from normal amount of zombies and reduce by one
-	if calculated > all_zombies(): # Calculated zombies have less than zombies
-		w_cankill = False # Block respawn
+	calculated = _value - 1 # Calculate from normal amount of zombies and reduce by one
+	if calculated < all_zombies():
+		_cankill = False
 
 def change_map(next_map):
 	queue_command_string(f'changelevel {next_map}')
