@@ -221,7 +221,7 @@ def load():
 			hostage_rescue(False)
 			echo_console('***********************************************************')
 	else:
-		raise NotImplementedError(f '[Zombie Riot] This plugin doesn\'t support {GAME_NAME}!') 
+		raise NotImplementedError(f'[Zombie Riot] This plugin doesn\'t support {GAME_NAME}!') 
 
 def unload():
 	global _loaded
