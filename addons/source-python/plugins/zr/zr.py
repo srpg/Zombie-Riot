@@ -426,7 +426,7 @@ def player_death(args):
 			victim.is_beaconned = False
 			_value -= 1
 			if not _value == alive_zombies(): # Works better than if _value > 19
-				check_value() # Call checker to ensure not getting invalid respawns
+				Delay(0, check_value) # Call checker to ensure not getting invalid respawns
 				if _humans > 0 and _cankill:
 					victim.delay(0.1, respawn, (userid,))
 			if _value < beacon_value:
