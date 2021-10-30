@@ -25,11 +25,17 @@ Currently have 11Days as max, but you can easyly add more.
 10. After those change in [Days] value = 12
 11. Save _settings.ini file after those changes and reload plugin to apply the changes
 
+# How to change day name
+1. Go inside of _settings.ini file.
+2. Modify name = 'The name you want use'
+3. Save the file and reload the plugin
+
 # How to add admin
 1. Go to addons/source-python/plugins/zr/modules/admin/ and you find inside of the folder _admins.ini file
 2. Open the _admins.ini file and add your steamid3.
 3. Add the steamid3 like this: [U:1:182650578] and save the file
-4. After adding steamid3 and save the file, type market in chat and it will show option admin.
+4. After adding steamid3 and save the file.
+5. Reload the plugin and type market in chat and it will show option admin.
 
 # Bug reports
 

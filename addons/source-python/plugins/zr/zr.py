@@ -204,6 +204,7 @@ def load():
 			queue_command_string('bot_quota 20')
 			queue_command_string('bot_join_after_player 0')
 			queue_command_string('bot_join_team t')
+			queue_command_string('bot_quota_mode off')
 			queue_command_string('mp_limitteams 0')
 			queue_command_string('mp_autoteambalance 0')
 			queue_command_string('bot_chatter off')
@@ -257,6 +258,11 @@ def get_speed(value):
 	val = '%s' % (value)
 	if not int(val) > max_day():
 		return float(_CONFIG[val]['speed'])
+
+def get_day_name(value):
+	val = '%s' % (value)
+	if not int(val) > max_day():
+		return _CONFIG[val]['name']
 
 def get_boss(value):
 	val = '%s' % (value)
@@ -519,7 +525,7 @@ def timer(userid, duration, count):
 
 def init_loop():
 	global hint
-	hint = Delay(0, info)
+	hint = Delay(1.0, info)
 
 def stop_loop():
 	global hint
@@ -531,7 +537,7 @@ def info():
 	global _show_hudhint
 	for player in PlayerIter('human'):
 		if info_panel:
-			if _show_hudhint:
+			if _show_hudhint and player.team > 1:
 				if not _day > max_day():
 					hudhint(player.userid, build_hudmessage(player.userid))
 
@@ -539,16 +545,16 @@ def build_hudmessage(userid):
 	global _value
 	global _day 
 	player = ZombiePlayer.from_userid(userid)
-	__msg__ = 'Day: %s/%s' % (_day, max_day())
-	__msg__ += '\nHumans: %s' % (_humans)
-	__msg__ += '\nZombies: %s' % (_value) # Todo Add name for each day
-	__msg__ += '\nZombies Damage: %s' % (zombies_dmg(_day))
-	__msg__ += '\nZombies Speed: %s x' % (get_speed(_day))
+	__msg__ = f'Day {_day}/{max_day()} - {get_day_name(_day)}'
+	__msg__ += f'\nZombies Left: {_value}'
+	__msg__ += f'\nHumans Left: {_humans}'
+	__msg__ += f'\nZombies Damage: {zombies_dmg(_day)} x'
+	__msg__ += f'\nZombies Speed: {get_speed(_day)} x'
 	if not player.player_target == False:
 		try:
 			target = Player.from_userid(player.player_target)
 			if not target.dead and target.health > 0:
-				__msg__ += '\n%s: %s' % (target.name, target.health)
+				__msg__ += f'\n{target.name} | {target.health}'
 			else:
 				player.player_target = False
 		except:
