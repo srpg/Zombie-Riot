@@ -38,7 +38,7 @@ def check_version():
 		if is_online == True:
 			echo_console('[Zombie Riot] There is no new version available!')
 		else:
-			print('[Zombie Riot] Version checking is not possible, please try again later')
+			print('[Zombie Riot] Version checking is not available!')
 
 def download(timeout=3):
 	print('[Zombie Riot] Started downloading the files. Progress 20%')
