@@ -425,9 +425,12 @@ def player_death(args):
 		global _cankill
 		userid = args.get_int('userid')
 		attacker = args.get_int('attacker')
+		victim = ZombiePlayer.from_userid(userid)
 		if attacker > 0:
 			clan_tag.deal_death(attacker)
-		victim = ZombiePlayer.from_userid(userid)
+			killer = ZombiePlayer.from_userid(attacker)
+			if victim.userid == killer.player_target:
+				killer.player_target = False
 		if victim.team == 2:
 			victim.is_beaconned = False
 			_value -= 1
