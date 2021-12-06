@@ -89,17 +89,33 @@ def days_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
 		userid = userid_from_index(_index)
-		if not zr._day >= zr.max_day():
-			zr._day += choice
-			SayText2('\x04[Zombie Riot] » You have changed day to %s!' % (choice)).send(index_from_userid(userid))
+		if zr._day <= zr.max_day():
+			cur = zr._day
+			difference = cur + choice
+			if difference >= zr.max_day():
+				zr._day = zr.max_day()
+				SayText2(f'\x04[Zombie Riot] » You have set the day to {zr.max_day()}!').send(_index)
+				return
+			else:
+				zr._day += choice
+				SayText2(f'\x04[Zombie Riot] » You have added {choice} days!').send(_index)
 
 def remove_days_menu_callback(_menu, _index, _option):
 	choice = _option.value
 	if choice:
 		userid = userid_from_index(_index)
-		if not zr._day <= 1:
-			zr._day -= choice
-			SayText2('\x04[Zombie Riot] » You have removed %s days!' % (choice)).send(index_from_userid(userid))
+		if zr._day >= 0:
+			cur = zr._day
+			difference = cur - choice 
+			if difference <= 0:
+				zr._day = 1
+				SayText2('\x04[Zombie Riot] » You have set the day to 1!').send(_index)
+				return
+			else:
+				change = choice
+			if not cur == 1:
+				zr._day -= change
+				SayText2(f'\x04[Zombie Riot] » You have removed {change} days!').send(_index)
 
 def admin_menu_callback(_menu, _index, _option):
 	choice = _option.value

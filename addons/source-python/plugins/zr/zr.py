@@ -246,38 +246,31 @@ def get_days(value):
 
 def get_health(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return int(_CONFIG[val]['health'])
+	return int(_CONFIG[val]['health'])
     
 def get_model(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return _CONFIG[val]['Model']
+	return _CONFIG[val]['Model']
  
 def get_speed(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return float(_CONFIG[val]['speed'])
+	return float(_CONFIG[val]['speed'])
 
 def get_day_name(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return _CONFIG[val]['name']
+	return _CONFIG[val]['name']
 
 def get_boss(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return int(_CONFIG['boss']['value'])
+	return int(_CONFIG['boss']['value'])
 
 def boss_zombies(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return int(_CONFIG['boss']['zombies'])
+	return int(_CONFIG['boss']['zombies'])
 
 def zombies_dmg(value):
 	val = '%s' % (value)
-	if not int(val) > max_day():
-		return float(_CONFIG[val]['dmg'])
+	return float(_CONFIG[val]['dmg'])
 
 def set_download():
 	echo_console('[Zombie Riot] Setting downloads!')
