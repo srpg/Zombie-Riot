@@ -603,57 +603,40 @@ def info_menu_callback(_menu, _index, _option):
 		userid = userid_from_index(_index)
 		if choice == 'Back':
 			main_menu(userid)
-		elif choice == 'menu':
-			potions_info_menu(userid)
 		elif choice == 'return':
 			info_menu(userid)
-            
-def potions_info_menu(userid):
-	menu = SimpleMenu()
-	if is_queued(menu, index_from_userid(userid)):
-		return
-	menu.append(Text('About Potions'))
-	menu.append(Text('-' * 30))
-	menu.append(Text('- Health potions is based of your total health.'))
-	menu.append(Text('- Health potions adds more health of your current health.'))
-	menu.append(Text('- Speed potions is based of your current speed.'))
-	menu.append(Text('- Speed potions adds more speed of your current speed.'))
-	menu.append(Text('- The purchased potions only last to:'))
-	menu.append(Text('- Death or new round start'))
-	menu.append(Text('-' * 30))
-	menu.append(SimpleOption(8, 'Back', 'return'))
-	menu.append(SimpleOption(0, 'Close', None))
-	menu.select_callback = info_menu_callback
-	menu.send(index_from_userid(userid))
-    
+
 def info_menu(userid):
 	menu = SimpleMenu()
 	if is_queued(menu, index_from_userid(userid)):
 		return
-	menu.append(Text('Info Menu'))
+	menu.append(Text('-> 1) About Zombie Riot'))
 	menu.append(Text('-' * 30))
-	menu.append(Text(' '))
-	menu.append(SimpleOption(1, 'Potions', 'menu'))
-	menu.append(Text(' '))
-	menu.append(Text('About Zombie Riot:'))
-	menu.append(Text('- Made by F1N/srpg'))
-	menu.append(Text('- Receives small bug fixes'))
-	menu.append(Text('- Has unigue support for clan tag'))
+	menu.append(Text('- Is developed by F1N/srpg'))
+	menu.append(Text('- Have unique support clan tag'))
 	menu.append(Text('- Have automatic rebuy for weapons'))
+	menu.append(Text('- Have Potions'))
+	menu.append(Text('- Current Version: %s' % version.Ver))
 	menu.append(Text(' '))
-	menu.append(Text(f'About Clan Tag: {clan}'))
-	menu.append(Text('- Increases your spawn health/speed'))
+	menu.append(Text('->2) About Clan Tag:'))
+	menu.append(Text('- Increases your health/speed (Spawn)'))
+	menu.append(Text('- Increases your health/speed (Kill)'))
 	menu.append(Text('- Lowers your gravity'))
-	menu.append(Text('- Increases Health/Speed per kill'))
-	menu.append(Text('- Increases Max health/speed limit'))
-	menu.append(Text('- 10% full clip restore chance when hurt'))
-	menu.append(Text('- Requires: %s clan_tag' % (clan)))
+	menu.append(Text('- 10% chance for full clip'))
+	menu.append(Text('- Requires: %s Clan Tag' % (clan)))
+	menu.append(Text(' '))
+	menu.append(Text('->3) About Potions:'))
+	menu.append(Text('- Can buy with the game cash'))
+	menu.append(Text('- Effect last to:'))
+	menu.append(Text('- Next Round & Your Death'))
+	menu.append(Text('- Speed & Health is based of:'))
+	menu.append(Text('- Your current speed/health'))
 	menu.append(Text('-' * 30))
 	menu.append(SimpleOption(8, 'Back', 'Back'))
 	menu.append(SimpleOption(0, 'Close', None))
 	menu.select_callback = info_menu_callback
 	menu.send(index_from_userid(userid))
-    
+
 def main_menu(userid):
 	menu = SimpleMenu()
 	if is_queued(menu, index_from_userid(userid)):
