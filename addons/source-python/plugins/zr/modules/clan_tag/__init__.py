@@ -33,4 +33,4 @@ def deal_hurt(attacker, userid):
 			if hurter.get_active_weapon().classname.replace('weapon_', '', 1) in zr.secondaries() + zr.rifles():
 				if not hurter.is_bot() and hurter.clan_tag in zr.server_clan and not hurter.dead:
 					if random.randint(1, 100) <= 10:
-						weapon.clip = weapon_manager[hurter.get_active_weapon().classname].clip
+						hurter.get_active_weapon().clip = weapon_manager[hurter.get_active_weapon().classname].clip
