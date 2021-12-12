@@ -35,7 +35,7 @@ from zr.modules import message
 __FILEPATH__    = path.Path(__file__).dirname()
 _CONFIG = ConfigObj(__FILEPATH__ + '/_settings.ini')
 download = os.path.join(__FILEPATH__ + '/css.txt')
-
+_loaded = 0
 weapons = [weapon.basename for weapon in WeaponClassIter(not_filters='knife')]
 
 _cankill = True
@@ -118,11 +118,6 @@ def hostage_rescue(enable):
 
 def hudhint(userid, text):
 	HintText(message=text).send(index_from_userid(userid))
-
-def remove_idle_weapons():
-	for w in WeaponIter.iterator():
-		if w.get_property_int('m_hOwnerEntity') in [-1, 0]:
-			w.call_input('Kill')
 
 def getUseridList():
 	for i in PlayerIter.iterator():
@@ -233,6 +228,8 @@ def unload():
 	admin.can_beacon = False
 	bomb_target(True)
 	hostage_rescue(True)
+	for player in PlayerIter('bot'):
+		player.unrestrict_weapons(*weapons)
                 
 def isAlive(userid):
 	return not Player(index_from_userid(userid)).dead
@@ -300,7 +297,6 @@ def player_spawn(args):
 		if player.team == 2: # Is a terrorist team
 			strip_weapons(userid)
 			player.restrict_weapons(*weapons)
-			remove_idle_weapons()
 			if not int(_day) > max_day():
 				value = _day
 				_health = get_health(value)
@@ -312,7 +308,7 @@ def player_spawn(args):
 		player.noblock = True
 		player.cash = 12000
 		name = player.name
-		if player.team == 3:
+		if player.team == 3 and not player.is_bot():
 			clan_tag.deal_spawn(userid)
 			if player.is_autobuy: # Is automatic rebuy activated
 				if not player.primary: # Player doesn't have rifle
@@ -339,7 +335,7 @@ def round_start(args):
 		_health = get_health(_day)
 		global _value
 		if get_boss(_day) == int(_day):
-			_value = boss_zombies(_day)#get_days(_day)
+			_value = boss_zombies(_day)
 		else:
 			_value = get_days(_day)
 		if server_name:
