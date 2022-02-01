@@ -428,18 +428,18 @@ def player_death(args):
 				if _humans > 0 and _cankill:
 					victim.delay(0.1, respawn, (userid,))
 			if _value < beacon_value:
-				for player in PlayerIter('bot'):
+				for player in PlayerIter(['bot', 'alive']):
 					admin.beacon(player.userid)
 			if _value == 0:
 				Delay(0.1, won)
-				for player in PlayerIter('all'):
+				for player in PlayerIter('human'):
 					player.client_command('r_screenoverlay overlays/zr/humans_win.vmt')
 		elif victim.team == 3: 
 			_humans -= 1
 			if _humans > 0:
 				victim.delay(0.1, timer, (userid, 30, 1))
 			if _humans == 0:
-				for player in PlayerIter('all'):
+				for player in PlayerIter('human'):
 					player.client_command('r_screenoverlay overlays/zr/zombies_win.vmt')
 
 def won():
