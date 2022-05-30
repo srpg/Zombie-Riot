@@ -14,6 +14,7 @@ UPDATE_PATH = GAME_PATH
 
 def check_version():
 	print('[Zombie Riot]: You have to check at github new version, no longer have automatic detect')
+	return f'{Ver}'
 
 def download(timeout=3):
 	print('[Zombie Riot] Started downloading the files. Progress 20%')
