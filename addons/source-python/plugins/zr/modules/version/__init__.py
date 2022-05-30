@@ -9,36 +9,11 @@ from commands.server import ServerCommand
 from engines.server import queue_command_string
 from zr import zr
 
-Ver = '2.1.1'
-new_version = ('https://cssbestrpg.online/version.txt')
+Ver = '2.1.2'
 UPDATE_PATH = GAME_PATH
 
-is_online = True
-
-def version_checker(timeout=3):
-	global is_online
-	try:
-		with urlopen(new_version, timeout=timeout) as url:
-			is_online = True
-			return url.read().decode('utf-8')
-	except urllib.error.URLError:
-		print('[Zombie Riot] Automatic version checker is offline!. You have to check yourself new version at github!')
-		is_online = False
-		return '%s' % (Ver)
-
 def check_version():
-	global is_online
-	if version_checker() > Ver:
-		if zr.auto_updater:
-			print('[Zombie Riot] Started updating plugin automatically!')
-			queue_command_string('zr_update')
-		else:
-			echo_console('[Zombie Riot] There is new version available to download!\n[Zombie Riot] Type in console zr_update to download new version')
-	else:
-		if is_online == True:
-			echo_console('[Zombie Riot] There is no new version available!')
-		else:
-			print('[Zombie Riot] Version checking is not available!')
+	print('[Zombie Riot]: You have to check at github new version, no longer have automatic detect')
 
 def download(timeout=3):
 	print('[Zombie Riot] Started downloading the files. Progress 20%')
@@ -69,7 +44,4 @@ def apply():
 
 @ServerCommand('zr_update')
 def zr_update(command):
-	if version_checker() > Ver:
-		download()
-	else:
-		echo_console('[Zombie Riot] There is no new version available to download')
+	download()
