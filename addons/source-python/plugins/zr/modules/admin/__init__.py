@@ -113,9 +113,9 @@ def remove_days_menu_callback(_menu, _index, _option):
 				return
 			else:
 				change = choice
-			if not cur == 1:
-				zr._day -= change
-				SayText2(f'\x04[Zombie Riot] » You have removed {change} days!').send(_index)
+				if not cur == 1:
+					zr._day -= change
+					SayText2(f'\x04[Zombie Riot] » You have removed {change} days!').send(_index)
 
 def admin_menu_callback(_menu, _index, _option):
 	choice = _option.value
